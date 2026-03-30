@@ -1,198 +1,155 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Academy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Academy</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<script>
-tailwind.config = {
-  darkMode: 'class'
-}
-</script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 
-<style>
-/* ===== BACKGROUND MASTERPIECE ===== */
-body {
-  background: #020617;
-  overflow-x: hidden;
-}
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
 
-.bg-art {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
+    /* Градиент анимация */
+    .gradient-bg {
+      background: linear-gradient(270deg, #4f46e5, #9333ea, #06b6d4);
+      background-size: 600% 600%;
+      animation: gradientMove 10s ease infinite;
+    }
 
-/* glowing blobs */
-.blob {
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(124,58,237,0.6), transparent 70%);
-  filter: blur(80px);
-  animation: float 12s infinite ease-in-out alternate;
-}
+    @keyframes gradientMove {
+      0% { background-position: 0% 50% }
+      50% { background-position: 100% 50% }
+      100% { background-position: 0% 50% }
+    }
 
-.blob:nth-child(2) {
-  background: radial-gradient(circle, rgba(6,182,212,0.6), transparent 70%);
-  top: 30%;
-  left: 60%;
-  animation-delay: 3s;
-}
+    /* Glass эффект */
+    .glass {
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.05);
+    }
 
-.blob:nth-child(3) {
-  background: radial-gradient(circle, rgba(236,72,153,0.5), transparent 70%);
-  top: 60%;
-  left: 20%;
-  animation-delay: 6s;
-}
-
-@keyframes float {
-  from { transform: translateY(-50px) scale(1); }
-  to { transform: translateY(50px) scale(1.2); }
-}
-
-/* grid overlay */
-.grid-overlay {
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
-/* glass */
-.glass {
-  backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.05);
-}
-
-/* text gradient */
-.gradient-text {
-  background: linear-gradient(90deg, #7c3aed, #06b6d4, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* fade animation */
-.fade-up {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s ease;
-}
-.fade-up.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
+    .dark .glass {
+      background: rgba(255,255,255,0.08);
+    }
+  </style>
 </head>
 
-<body class="text-white">
+<body class="bg-white text-black dark:bg-black dark:text-white transition duration-500">
 
-<!-- BACKGROUND -->
-<div class="bg-art">
-  <div class="blob"></div>
-  <div class="blob"></div>
-  <div class="blob"></div>
-  <div class="grid-overlay"></div>
-</div>
+<!-- HEADER -->
+<header class="fixed w-full z-50 glass border-b border-white/10">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">AI Academy</h1>
 
-<!-- HERO -->
-<section class="relative z-10 min-h-screen flex items-center justify-center text-center px-6">
-
-  <div class="max-w-3xl fade-up">
-    <h1 class="text-4xl md:text-6xl font-bold mb-6 gradient-text leading-tight">
-      Освой нейросети
-    </h1>
-
-    <p class="text-lg md:text-xl text-gray-300 mb-10">
-      Научись автоматизировать задачи, создавать арты, музыку, видео, программировать и многое другое
-    </p>
-
-    <button onclick="scrollToForm()" 
-      class="px-10 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:scale-110 transition">
-      Начать
+    <button onclick="toggleTheme()" class="text-sm px-3 py-1 border rounded-lg hover:scale-105 transition">
+      🌗
     </button>
   </div>
+</header>
 
-</section>
+<!-- HERO -->
+<section class="min-h-screen flex items-center justify-center gradient-bg text-white px-4">
+  <div class="text-center max-w-3xl">
 
-<!-- FORM SCREEN -->
-<section id="formSection" class="relative z-10 min-h-screen flex items-center justify-center px-6">
+    <h2 class="text-3xl md:text-5xl font-bold leading-tight mb-6 animate-fade">
+      Научись создавать<br>
+      видео, арты, музыку,<br>
+      программировать и автоматизировать<br>
+      задачи с помощью AI
+    </h2>
 
-  <div class="glass p-10 rounded-2xl max-w-md w-full fade-up">
-
-    <h2 class="text-2xl mb-6 text-center">Записаться</h2>
-
-    <form id="form" class="space-y-4">
-      <input id="name" type="text" placeholder="Имя" required 
-        class="w-full p-3 rounded bg-black/40">
-
-      <input id="email" type="email" placeholder="Email" required 
-        class="w-full p-3 rounded bg-black/40">
-
-      <button class="w-full py-3 rounded bg-gradient-to-r from-purple-600 to-cyan-500 hover:scale-105 transition">
-        Отправить
-      </button>
-    </form>
-
-    <p id="status" class="hidden mt-4 text-green-400 text-center">
-      Заявка отправлена 🚀
+    <p class="text-lg opacity-80 mb-8">
+      Чат-боты, нейросети и реальные навыки будущего — уже сегодня
     </p>
 
-  </div>
+    <a href="#form"
+       class="px-6 py-3 bg-white text-black rounded-xl font-semibold hover:scale-105 transition shadow-xl">
+      Начать обучение
+    </a>
 
+  </div>
 </section>
 
+<!-- FORM -->
+<section id="form" class="py-20 px-4">
+  <div class="max-w-xl mx-auto text-center">
+
+    <h3 class="text-3xl font-bold mb-6">
+      Оставь заявку
+    </h3>
+
+    <p class="opacity-70 mb-10">
+      Мы свяжемся с тобой через Telegram
+    </p>
+
+    <div class="glass rounded-2xl p-6 shadow-2xl">
+
+      <input
+        id="phone"
+        type="tel"
+        placeholder="Введите номер телефона"
+        class="w-full px-4 py-3 rounded-xl mb-4 bg-transparent border border-gray-300 dark:border-gray-600 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+      />
+
+      <button onclick="submitForm()"
+        class="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:scale-105 transition">
+        Отправить
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center py-6 opacity-60 text-sm">
+  AI Academy © 2026
+</footer>
+
+<!-- JS -->
 <script>
-// SCROLL
-function scrollToForm() {
-  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+  // Theme toggle
+  function toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+  }
+
+  // Submit
+  function submitForm() {
+    const phone = document.getElementById('phone').value.trim();
+
+    if (!phone) {
+      alert("Введите номер телефона");
+      return;
+    }
+
+    // Переход в Telegram бота
+    const botLink = "https://t.me/your_bot_username?start=" + encodeURIComponent(phone);
+
+    window.location.href = botLink;
+  }
+</script>
+
+<!-- Animations -->
+<style>
+@keyframes fade {
+  from { opacity: 0; transform: translateY(20px);}
+  to { opacity: 1; transform: translateY(0);}
 }
 
-// ANIMATION
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('show');
-    }
-  });
-});
-
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-// TELEGRAM
-document.getElementById('form').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-
-  const text = `Новая заявка:\nИмя: ${name}\nEmail: ${email}`;
-
-  const TOKEN = "YOUR_BOT_TOKEN";
-  const CHAT_ID = "YOUR_CHAT_ID";
-
-  fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: text
-    })
-  })
-  .then(() => {
-    document.getElementById('status').classList.remove('hidden');
-  })
-  .catch(() => {
-    alert("Ошибка отправки");
-  });
-});
-</script>
+.animate-fade {
+  animation: fade 1.2s ease forwards;
+}
+</style>
 
 </body>
 </html>
