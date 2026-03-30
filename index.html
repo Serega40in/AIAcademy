@@ -118,25 +118,20 @@
 
 <!-- JS -->
 <script>
-  // Theme toggle
-  function toggleTheme() {
-    document.documentElement.classList.toggle('dark');
+function submitForm() {
+  const phone = document.getElementById('phone').value.trim();
+
+  if (!phone) {
+    alert("Введите номер телефона");
+    return;
   }
 
-  // Submit
-  function submitForm() {
-    const phone = document.getElementById('phone').value.trim();
+  const text = encodeURIComponent("Заявка с сайта AI Academy. Телефон: " + phone);
 
-    if (!phone) {
-      alert("Введите номер телефона");
-      return;
-    }
+  const url = "https://t.me/serega40in?text=" + text;
 
-    // Переход в Telegram бота
-    const botLink = "https://t.me/your_bot_username?start=" + encodeURIComponent(phone);
-
-    window.location.href = botLink;
-  }
+  window.open(url, "_blank");
+}
 </script>
 
 <!-- Animations -->
