@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вебинар по нейросетям • Сегодня в 13:00</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #2a0077 0%, #1a0033 70%, #0a001a 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Фон с космическими эффектами */
+    .background {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Главное существо — адаптивное */
+    .creature {
+      position: absolute;
+      width: 90vw;
+      max-width: 820px;
+      height: 90vw;
+      max-height: 820px;
+      background: url('https://i.imgur.com/5vN8kL2.png') center/contain no-repeat;
+      filter: drop-shadow(0 0 100px rgba(180, 80, 255, 0.9));
+      animation: 
+        float 9s ease-in-out infinite,
+        slowRotate 70s linear infinite,
+        glowPulse 5s ease-in-out infinite;
+      opacity: 0.88;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      box-shadow: 
+        5% 10% 2px #fff,
+        20% 30% 1px #fff,
+        40% 15% 2px #fff,
+        60% 40% 1px #fff,
+        80% 8% 2px #fff,
+        10% 50% 1px #fff,
+        70% 55% 2px #fff,
+        30% 65% 1px #fff;
+      animation: twinkle 8s infinite alternate;
+      opacity: 0.7;
+    }
+
+    .dna-spiral {
+      position: absolute;
+      width: 200px;
+      height: 500px;
+      background: repeating-linear-gradient(45deg, 
+        transparent 0px,
+        rgba(180, 80, 255, 0.25) 8px,
+        transparent 16px
+      );
+      border-radius: 50%;
+      filter: blur(3px);
+      animation: spinDNA 28s linear infinite;
+      opacity: 0.45;
+      top: 15%;
+      left: 5%;
+    }
+
+    .dna-spiral2 {
+      width: 220px;
+      height: 480px;
+      top: 40%;
+      right: 5%;
+      animation-duration: 42s;
+      transform: rotate(25deg);
+      opacity: 0.35;
+    }
+
+    .particle {
+      position: absolute;
+      background: #c77dff;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #e0aaff, 0 0 40px #9d4edd;
+      animation: particleFloat linear infinite;
+    }
+
+    /* Контент — адаптивный */
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      width: 90%;
+      max-width: 720px;
+      padding: 40px 25px;
+      background: rgba(20, 0, 60, 0.6);
+      border-radius: 28px;
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(180, 100, 255, 0.4);
+      box-shadow: 0 0 80px rgba(157, 78, 221, 0.6);
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 8vw, 3.4rem);
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #e0aaff, #c77dff, #b464ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .time {
+      font-size: clamp(2rem, 7vw, 3rem);
+      font-weight: 700;
+      margin: 20px 0 25px;
+      color: #e0aaff;
+      text-shadow: 0 0 40px #c77dff;
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 4vw, 1.5rem);
+      opacity: 0.95;
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 18px 50px;
+      font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+      font-weight: 700;
+      background: linear-gradient(45deg, #9d4edd, #c77dff, #b464ff);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 15px 40px rgba(157, 78, 221, 0.6);
+      width: 100%;
+      max-width: 320px;
+    }
+
+    button:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 25px 60px rgba(199, 125, 255, 0.8);
+    }
+
+    /* Анимации */
+    @keyframes float {
+      0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+      50% { transform: translate(-50%, -50%) translateY(-40px); }
+    }
+
+    @keyframes slowRotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 100px rgba(180, 80, 255, 0.9)); }
+      50% { filter: drop-shadow(0 0 160px rgba(200, 120, 255, 1)); }
+    }
+
+    @keyframes spinDNA {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(110vh) scale(0.4); opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(-80px) scale(1.6); opacity: 0; }
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.6; }
+      100% { opacity: 0.95; }
+    }
+
+    /* Мобильные улучшения */
+    @media (max-width: 480px) {
+      .creature {
+        width: 85vw;
+        height: 85vw;
+        opacity: 0.75;
+      }
+      
+      .content {
+        padding: 35px 20px;
+        margin: 20px;
+      }
+      
+      .dna-spiral, .dna-spiral2 {
+        display: none; /* На очень маленьких экранах убираем ДНК, чтобы не мешало */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background">
+    <div class="creature"></div>
+    <div class="stars"></div>
+    <div class="dna-spiral"></div>
+    <div class="dna-spiral dna-spiral2"></div>
+
+    <!-- Частицы -->
+    <div class="particle" style="width:8px; height:8px; left:10%; animation-duration:18s; animation-delay:0s;"></div>
+    <div class="particle" style="width:14px; height:14px; left:22%; animation-duration:25s; animation-delay:2s;"></div>
+    <div class="particle" style="width:6px; height:6px; left:35%; animation-duration:14s; animation-delay:5s;"></div>
+    <div class="particle" style="width:11px; height:11px; left:48%; animation-duration:22s; animation-delay:1s;"></div>
+    <div class="particle" style="width:9px; height:9px; left:65%; animation-duration:30s; animation-delay:8s;"></div>
+    <div class="particle" style="width:7px; height:7px; left:78%; animation-duration:16s; animation-delay:4s;"></div>
+    <div class="particle" style="width:13px; height:13px; left:85%; animation-duration:28s; animation-delay:7s;"></div>
+    <div class="particle" style="width:5px; height:5px; left:92%; animation-duration:20s; animation-delay:12s;"></div>
+  </div>
+
+  <div class="content">
+    <p class="subtitle">Открытый бесплатный вебинар</p>
+    <h1>Обучение нейросетям</h1>
+    <div class="time">Сегодня в 13:00</div>
+    <p style="font-size: clamp(1.05rem, 4vw, 1.35rem); margin: 20px 0; opacity: 0.95; line-height: 1.4;">
+      Присоединяйся и узнай, как уверенно работать с нейросетями!
+    </p>
+    <button onclick="window.open('https://t.me/neyroexersis?livestream=b98366a564052b9525', '_blank')">
+      Присоединиться к вебинару
+    </button>
+  </div>
+
+</body>
+</html>
