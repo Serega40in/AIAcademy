@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>serega40in • НейроАлхимия</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+        
+        :root {
+            --neon-cyan: #00f7ff;
+            --neon-purple: #9d00ff;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .title-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .hero-bg {
+            background: radial-gradient(circle at 50% 20%, rgba(157, 0, 255, 0.18) 0%, transparent 70%);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 25px var(--neon-cyan);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .particle-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.28;
+            pointer-events: none;
+        }
+
+        .social-card {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .social-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 30px 60px -15px rgb(0 247 255 / 0.25);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(to right, #00f7ff, #9d00ff);
+        }
+
+        @keyframes zenFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(2deg); }
+        }
+        
+        .zen-float {
+            animation: zenFloat 14s ease-in-out infinite;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Исправления переполнения шрифта */
+        .title-font {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        h1, h2, h3 {
+            hyphens: auto;
+            overflow-wrap: break-word;
+        }
+
+        .clamp-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a1f] text-white overflow-x-hidden">
+
+    <!-- Particles -->
+    <canvas id="particles" class="particle-canvas"></canvas>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🌿</div>
+                <div class="min-w-0">
+                    <span class="title-font text-2xl sm:text-3xl tracking-tighter neon-text block">serega40in</span>
+                    <span class="text-cyan-300 text-base sm:text-xl font-light">• НейроАлхимия</span>
+                </div>
+            </div>
+            <a href="https://t.me/serega40in" target="_blank" 
+               class="px-6 sm:px-8 py-3.5 text-sm font-medium border border-white/30 hover:border-cyan-400 rounded-full flex items-center gap-2 transition-all active:scale-95 whitespace-nowrap">
+                <i class="fa-brands fa-telegram"></i>
+                <span class="hidden sm:inline">Заказать алхимию</span>
+                <span class="sm:hidden">Заказать</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="min-h-screen hero-bg flex items-center pt-24 relative">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 md:space-y-10 fade-in" id="hero-text">
+                <div class="inline-flex items-center gap-2 px-5 sm:px-6 py-3 glass rounded-3xl text-sm text-cyan-300 tracking-widest whitespace-nowrap">
+                    КОД → ИСКУССТВО → ГАРМОНИЯ
+                </div>
+                
+                <h1 class="title-font text-5xl sm:text-6xl md:text-7xl leading-none font-medium tracking-[-1px] neon-text">
+                    НейроАлхимия
+                </h1>
+                
+                <p class="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-lg font-light">
+                    Создаю сайты, ИИ-аватары, видеоклипы, аудио и нейро-поэзию.<br>
+                    Превращаю идеи в живые произведения.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#services" 
+                       class="px-8 sm:px-10 py-5 bg-white text-black rounded-3xl font-medium flex items-center justify-center gap-3 text-base sm:text-lg hover:bg-cyan-300 transition-all active:scale-95">
+                        Заказать услугу
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#poetry" 
+                       class="px-8 sm:px-10 py-5 border-2 border-white/40 hover:border-purple-400 rounded-3xl font-medium flex items-center justify-center gap-3 text-base sm:text-lg transition-all">
+                        Проект Леонида Сидорова
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visual -->
+            <div class="relative flex justify-center pt-10 md:pt-0 fade-in" id="hero-visual">
+                <div class="w-72 h-72 sm:w-80 sm:h-80 md:w-[420px] md:h-[420px] bg-gradient-to-br from-cyan-400/10 via-purple-600/10 to-transparent rounded-[3.5rem] zen-float flex items-center justify-center border border-white/10">
+                    <div class="text-center px-4">
+                        <div class="text-[90px] sm:text-[110px] mb-4">🌌</div>
+                        <div class="title-font text-4xl sm:text-5xl tracking-tighter neon-text">serega40in</div>
+                        <div class="text-cyan-400/80 mt-2 text-lg">код в искусство</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 text-xs text-cyan-300/60 flex flex-col items-center tracking-widest">
+            <div class="animate-bounce mb-1">↓</div>
+            СКРОЛЛ
+        </div>
+    </header>
+
+    <!-- All Accounts -->
+    <section id="accounts" class="py-20 sm:py-24 max-w-7xl mx-auto px-5 sm:px-6">
+        <div class="text-center mb-12 sm:mb-16">
+            <h2 class="section-title title-font text-4xl sm:text-5xl md:text-6xl font-medium mx-auto">Все миры в гармонии</h2>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-5 sm:gap-6">
+            <a href="https://www.youtube.com/@serega40in" target="_blank" class="social-card glass rounded-3xl p-6 sm:p-8 text-center block">
+                <i class="fa-brands fa-youtube text-5xl sm:text-6xl text-red-500 mb-5"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">@serega40in</h3>
+                <p class="text-sm text-gray-400 mt-2">AI-клипы и нейро-поэзия</p>
+            </a>
+            <a href="https://vk.com/its40in" target="_blank" class="social-card glass rounded-3xl p-6 sm:p-8 text-center block">
+                <i class="fa-brands fa-vk text-5xl sm:text-6xl text-blue-600 mb-5"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">its40in</h3>
+                <p class="text-sm text-gray-400 mt-2">Энергия • Практики</p>
+            </a>
+            <a href="https://www.instagram.com/sergeyasgardskii/" target="_blank" class="social-card glass rounded-3xl p-6 sm:p-8 text-center block">
+                <i class="fa-brands fa-instagram text-5xl sm:text-6xl text-pink-500 mb-5"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">sergeyasgardskii</h3>
+                <p class="text-sm text-gray-400 mt-2">Рилсы и визуалы</p>
+            </a>
+            <a href="https://t.me/neyroexersis" target="_blank" class="social-card glass rounded-3xl p-6 sm:p-8 text-center block">
+                <i class="fa-brands fa-telegram text-5xl sm:text-6xl text-sky-400 mb-5"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">neyroexersis</h3>
+                <p class="text-sm text-gray-400 mt-2">ИИ-эксперименты</p>
+            </a>
+            <a href="https://t.me/serega40in" target="_blank" class="social-card glass rounded-3xl p-6 sm:p-8 text-center block col-span-2 md:col-span-1">
+                <i class="fa-brands fa-telegram text-5xl sm:text-6xl text-emerald-400 mb-5"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">serega40in</h3>
+                <p class="text-sm text-gray-400 mt-2">Личный контакт</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Poetry Project Леонида Сидорова -->
+    <section id="poetry" class="py-20 sm:py-24 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6">
+            <div class="grid md:grid-cols-12 gap-12 lg:gap-16 items-center">
+                <div class="md:col-span-5 fade-in">
+                    <span class="uppercase text-purple-300 text-sm tracking-widest font-light">Проект</span>
+                    <h2 class="title-font text-4xl sm:text-5xl md:text-6xl font-medium leading-none mt-4">
+                        Стихи Леонида Сидорова<br>в нейро-алхимии
+                    </h2>
+                    <p class="mt-8 text-gray-400 text-base sm:text-lg">
+                        Белорусская духовная лирика, оживлённая искусственным интеллектом. 
+                        Каждое видео — трансформация слова в визуальный космос.
+                    </p>
+                </div>
+                
+                <div class="md:col-span-7 fade-in">
+                    <div class="glass rounded-3xl p-5 sm:p-8 md:p-10">
+                        <div class="aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl">
+                            <iframe width="100%" height="100%" 
+                                    src="https://www.youtube.com/embed/kq9xTMB2d4Q" 
+                                    title="Ананасная вода Несгораемой звезды — Леонид Сидоров" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen></iframe>
+                        </div>
+                        <p class="text-center mt-6 text-sm text-gray-400 px-2">
+                            «Ананасная вода Несгораемой звезды» — AI-видеоклип по стихам Леонида Сидорова
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-20 sm:py-24 max-w-7xl mx-auto px-5 sm:px-6">
+        <div class="text-center mb-12 sm:mb-16">
+            <h2 class="section-title title-font text-4xl sm:text-5xl md:text-6xl font-medium">Услуги нейро-алхимии</h2>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+            <div class="glass rounded-3xl p-8 sm:p-10 hover:ring-1 hover:ring-cyan-400/30 transition-all fade-in">
+                <i class="fa-solid fa-laptop-code text-4xl sm:text-5xl text-cyan-400 mb-8"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">Сайты и лендинги</h3>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base">Современные, быстрые, с интеграцией ИИ. GitHub Pages, Tilda, Framer.</p>
+            </div>
+            <div class="glass rounded-3xl p-8 sm:p-10 hover:ring-1 hover:ring-purple-400/30 transition-all fade-in">
+                <i class="fa-solid fa-video text-4xl sm:text-5xl text-purple-400 mb-8"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">ИИ-видеоклипы и аватары</h3>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base">Говорящие аватары, клипы на стихи, нейро-анимация под любой текст.</p>
+            </div>
+            <div class="glass rounded-3xl p-8 sm:p-10 hover:ring-1 hover:ring-emerald-400/30 transition-all fade-in">
+                <i class="fa-solid fa-code text-4xl sm:text-5xl text-emerald-400 mb-8"></i>
+                <h3 class="text-xl sm:text-2xl font-medium">Программирование и автоматизация</h3>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base">Скрипты, боты, нейро-инструменты, сложные интеграции.</p>
+            </div>
+        </div>
+        
+        <div class="mt-12 sm:mt-16 text-center">
+            <a href="https://t.me/serega40in" target="_blank"
+               class="inline-flex items-center gap-4 px-10 sm:px-12 py-5 sm:py-6 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-3xl text-lg sm:text-xl font-medium hover:scale-105 transition-all">
+                Начать сотрудничество
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 sm:py-20 border-t border-white/10 bg-black/40">
+        <div class="max-w-7xl mx-auto px-5 sm:px-6 text-center">
+            <p class="title-font text-3xl sm:text-4xl neon-text">serega40in • НейроАлхимия</p>
+            <p class="text-gray-400 mt-3 text-sm sm:text-base">Минимализм. Дзен. Совершенство.</p>
+            
+            <div class="flex justify-center gap-8 sm:gap-10 text-3xl sm:text-4xl mt-12 sm:mt-16 text-gray-400">
+                <a href="https://www.youtube.com/@serega40in" target="_blank" class="hover:text-red-500"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://vk.com/its40in" target="_blank" class="hover:text-blue-500"><i class="fa-brands fa-vk"></i></a>
+                <a href="https://www.instagram.com/sergeyasgardskii/" target="_blank" class="hover:text-pink-500"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://t.me/neyroexersis" target="_blank" class="hover:text-cyan-400"><i class="fa-brands fa-telegram"></i></a>
+            </div>
+            
+            <p class="text-xs text-gray-500 mt-16 sm:mt-20">© 2026 • Создано с душой и нейросетями</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind
+        tailwind.config = { content: ["*"] };
+
+        // Particles
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.7 + 0.6;
+                this.speedX = Math.random() * 0.45 - 0.225;
+                this.speedY = Math.random() * 0.45 - 0.225;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 247, 255, 0.65)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Scroll fade-in
+        function handleScroll() {
+            document.querySelectorAll('.fade-in').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.82) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            for (let i = 0; i < 85; i++) particles.push(new Particle());
+            animateParticles();
+
+            window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); // initial
+
+            console.log('%c✅ НейроАлхимия загружена идеально 🌿', 'color:#00f7ff; font-size:14px; font-family:Space Grotesk');
+        });
+    </script>
+</body>
+              </html>
