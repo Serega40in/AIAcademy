@@ -34,4 +34,628 @@
     position: fixed; top: 0; left: 0;
     pointer-events: none;
     z-index: 9999;
-    
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor.big { transform: translate(-50%,-50%) scale(4); background: var(--acid); }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 9000;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vw 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .bg-circle-1 { width: 70vw; height: 70vw; background: var(--o); opacity: 0.07; top: -20vw; right: -20vw; animation: breathe 7s ease-in-out infinite; }
+  .bg-circle-2 { width: 30vw; height: 30vw; background: var(--acid); opacity: 0.05; bottom: 5vw; left: -5vw; animation: breathe 5s ease-in-out infinite reverse; }
+
+  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+  .ticker {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    background: var(--o);
+    padding: 6px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 18s linear infinite;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--dark);
+  }
+  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--o);
+    margin-top: 40px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(4rem, 14vw, 13rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: var(--cream);
+  }
+  h1 .fox { color: var(--o); display: block; }
+  h1 .funny {
+    display: block;
+    -webkit-text-stroke: 2px var(--cream);
+    color: transparent;
+    animation: strobeColor 8s steps(1) infinite;
+  }
+  @keyframes strobeColor {
+    0%,100% { color: transparent; -webkit-text-stroke-color: var(--cream); }
+    45% { color: transparent; -webkit-text-stroke-color: var(--o); }
+    90% { color: transparent; -webkit-text-stroke-color: var(--acid); }
+  }
+
+  .subline {
+    margin-top: 3rem;
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    max-width: 480px;
+    line-height: 1.8;
+    color: #888;
+  }
+  .subline em { color: var(--cream); font-style: normal; }
+
+  .cta-row { margin-top: 3rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+  .btn-main {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--o);
+    color: var(--dark);
+    border: none;
+    padding: 1.1rem 2.4rem;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.15s, background 0.15s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-main:hover { background: var(--acid); transform: translate(-3px,-3px); }
+
+  .btn-ghost {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;
+    cursor: none;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--cream); }
+
+  /* scrolling fox text */
+  .fox-scroll {
+    position: absolute;
+    bottom: 2rem; right: 0;
+    writing-mode: vertical-rl;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 5px;
+    color: #333;
+    text-transform: uppercase;
+    animation: fadeUpDown 3s ease-in-out infinite;
+  }
+  @keyframes fadeUpDown { 0%,100%{opacity:0.3; transform:translateY(0)} 50%{opacity:1; transform:translateY(-8px)} }
+
+  /* ── SECTION: НЕПОНЯТНО ── */
+  #wtf {
+    padding: 8vw;
+    position: relative;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .wtf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: #1e1e1e;
+  }
+
+  .wtf-cell {
+    background: var(--dark);
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .wtf-cell:hover { background: #141414; }
+  .wtf-cell:hover .wtf-num { color: var(--o); }
+
+  .wtf-num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: #1a1a1a;
+    line-height: 1;
+    transition: color 0.3s;
+    margin-bottom: 1rem;
+  }
+  .wtf-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-bottom: 0.75rem;
+  }
+  .wtf-body {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  .wtf-body em { color: var(--o); font-style: normal; }
+
+  /* rotating badge */
+  .spin-badge {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    width: 60px; height: 60px;
+  }
+  .spin-badge svg { animation: spin 12s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── MARQUEE STRIP ── */
+  .strip {
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 1px solid #1e1e1e;
+    padding: 1.2rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .strip-inner {
+    display: inline-block;
+    animation: ticker 25s linear infinite;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e1e1e;
+    -webkit-text-stroke: 1px #333;
+    letter-spacing: 1px;
+  }
+  .strip-dot { color: var(--o); -webkit-text-stroke: 0; margin: 0 1rem; }
+
+  /* ── BIG STATEMENT ── */
+  #statement {
+    padding: 10vw 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .statement-text {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    max-width: 900px;
+  }
+  .statement-text .hl { color: var(--o); }
+  .statement-text .hl2 { color: var(--acid); }
+  .statement-text .scratch {
+    text-decoration: line-through;
+    color: #333;
+    font-size: 0.6em;
+  }
+
+  .aside-note {
+    position: absolute;
+    right: 8vw;
+    top: 50%;
+    transform: translateY(-50%) rotate(3deg);
+    max-width: 220px;
+    font-size: 0.75rem;
+    color: #444;
+    line-height: 1.7;
+    border-left: 2px solid #2a2a2a;
+    padding-left: 1rem;
+  }
+
+  /* ── SCHEDULE ── */
+  #schedule {
+    padding: 4vw 8vw 8vw;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  .sched-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .sched-row {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #141414;
+    transition: border-color 0.2s;
+    cursor: none;
+  }
+  .sched-row:hover { border-color: var(--o); }
+  .sched-row:hover .sched-day { color: var(--o); }
+
+  .sched-day {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #333;
+    min-width: 80px;
+    transition: color 0.2s;
+  }
+  .sched-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: var(--cream);
+    flex: 1;
+  }
+  .sched-tag {
+    font-size: 0.7rem;
+    background: #1a1a1a;
+    color: #555;
+    padding: 4px 12px;
+    letter-spacing: 1px;
+  }
+  .sched-tag.live { background: var(--o); color: var(--dark); font-weight: 700; }
+
+  /* ── FINAL CTA ── */
+  #final {
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #final::before {
+    content: 'FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX FUNNY FOX';
+    position: absolute;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 8rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1px #e0dbd0;
+    white-space: nowrap;
+    top: 50%;
+    left: -20%;
+    transform: translateY(-50%) rotate(-8deg);
+    pointer-events: none;
+    letter-spacing: -2px;
+  }
+
+  .final-big {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    position: relative;
+    z-index: 1;
+  }
+  .final-big span { display: block; }
+  .final-big .line2 { color: var(--o); }
+
+  .final-sub {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #888;
+    letter-spacing: 1px;
+    position: relative; z-index: 1;
+  }
+
+  .final-btn {
+    margin-top: 2.5rem;
+    position: relative; z-index: 1;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    padding: 1.2rem 3rem;
+    cursor: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .final-btn:hover { background: var(--o); color: var(--dark); transform: scale(1.03); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 2rem 8vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #1a1a1a;
+  }
+  .footer-logo {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #333;
+  }
+  .footer-logo span { color: var(--o); }
+  .footer-note { font-size: 0.7rem; color: #333; letter-spacing: 1px; }
+
+  /* ── GLITCH on scroll ── */
+  .glitch {
+    position: relative;
+    display: inline-block;
+  }
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 3px;
+    color: var(--pink);
+    clip-path: inset(0 0 80% 0);
+    animation: glitch-anim 4s steps(1) infinite;
+    pointer-events: none;
+  }
+  @keyframes glitch-anim {
+    0%,90%,100% { clip-path: inset(0 0 95% 0); transform: translateX(0); }
+    92% { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+    94% { clip-path: inset(50% 0 30% 0); transform: translateX(4px); }
+    96% { clip-path: inset(70% 0 10% 0); transform: translateX(-2px); }
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .wtf-grid { grid-template-columns: 1fr; }
+    .aside-note { display: none; }
+    .sched-row { flex-direction: column; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="ticker">
+    <span class="ticker-inner">
+      FUNNY FOX &nbsp;·&nbsp; ЭТО ЖИВОЕ &nbsp;·&nbsp; КАЖДЫЙ ДЕНЬ &nbsp;·&nbsp; НИКТО НЕ ЗНАЕТ ЧТО БУДЕТ &nbsp;·&nbsp; ПОДПИШИСЬ &nbsp;·&nbsp; ИЛИ НЕТ &nbsp;·&nbsp; НО ЛУЧШЕ ДА &nbsp;·&nbsp; FUNNY FOX &nbsp;·&nbsp; ЭТО ЖИВОЕ &nbsp;·&nbsp; КАЖДЫЙ ДЕНЬ &nbsp;·&nbsp; НИКТО НЕ ЗНАЕТ ЧТО БУДЕТ &nbsp;·&nbsp; ПОДПИШИСЬ &nbsp;·&nbsp; ИЛИ НЕТ &nbsp;·&nbsp; НО ЛУЧШЕ ДА &nbsp;·&nbsp;
+    </span>
+  </div>
+
+  <div class="bg-circle bg-circle-1"></div>
+  <div class="bg-circle bg-circle-2"></div>
+
+  <p class="eyebrow">Telegram · Прямой Эфир · Ежедневно</p>
+
+  <h1>
+    <span class="funny glitch" data-text="FUNNY">FUNNY</span>
+    <span class="fox">FOX</span>
+  </h1>
+
+  <p class="subline">
+    Шоу без <em>сценария</em>.<br>
+    Темы без <em>предупреждения</em>.<br>
+    Гости без <em>понятия куда пришли</em>.
+  </p>
+
+  <div class="cta-row">
+    <a href="https://t.me/funnyfoxer" class="btn-main">Смотреть сейчас</a>
+    <a href="#wtf" class="btn-ghost">но что это вообще?</a>
+  </div>
+
+  <div class="fox-scroll">🦊 прокрути</div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <span class="strip-inner">
+    ЖИВОЙ ЭФИР <span class="strip-dot">◆</span> РАЗНЫЕ ГОСТИ <span class="strip-dot">◆</span> ТЕМА ДНЯ <span class="strip-dot">◆</span> АБСУРД ПРИВЕТСТВУЕТСЯ <span class="strip-dot">◆</span> СКРИПТЫ ЗАПРЕЩЕНЫ <span class="strip-dot">◆</span> ЛИСА ЗНАЕТ <span class="strip-dot">◆</span> ЖИВОЙ ЭФИР <span class="strip-dot">◆</span> РАЗНЫЕ ГОСТИ <span class="strip-dot">◆</span> ТЕМА ДНЯ <span class="strip-dot">◆</span> АБСУРД ПРИВЕТСТВУЕТСЯ <span class="strip-dot">◆</span> СКРИПТЫ ЗАПРЕЩЕНЫ <span class="strip-dot">◆</span> ЛИСА ЗНАЕТ <span class="strip-dot">◆</span>
+  </span>
+</div>
+
+<!-- WTF GRID -->
+<section id="wtf">
+  <div class="wtf-grid">
+
+    <div class="wtf-cell reveal">
+      <div class="wtf-num">01</div>
+      <div class="wtf-title">Что это</div>
+      <div class="wtf-body">
+        Это шоу. Оно <em>случается</em> каждый день.<br><br>
+        Без монтажа. Без репетиций.<br>
+        Иногда без плана.
+      </div>
+      <div class="spin-badge">
+        <svg viewBox="0 0 60 60" width="60" height="60">
+          <path id="circle-path" fill="none" d="M30,5 a25,25 0 1,1 -0.01,0"/>
+          <text fill="#333" font-size="7.5" font-family="Courier Prime, monospace" letter-spacing="3.2">
+            <textPath href="#circle-path">FUNNY · FOX · LIVE · DAILY ·</textPath>
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="wtf-cell reveal" style="transition-delay:0.1s">
+      <div class="wtf-num">02</div>
+      <div class="wtf-title">Кто это</div>
+      <div class="wtf-body">
+        Ведущий — <em>лиса</em>.<br><br>
+        Быстрая. Хитрая.<br>
+        Задаёт вопросы прежде чем<br>
+        гость успел сесть.
+      </div>
+    </div>
+
+    <div class="wtf-cell reveal" style="transition-delay:0.2s">
+      <div class="wtf-num">03</div>
+      <div class="wtf-title">Зачем это</div>
+      <div class="wtf-body">
+        Непонятно.<br><br>
+        Но включают каждый день.<br>
+        И не выключают.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATEMENT -->
+<section id="statement">
+  <div class="statement-text reveal">
+    Никто не знает<br>
+    <span class="hl">что будет</span><br>
+    в следующем эфире.<br>
+    <span class="scratch">Включая ведущего.</span><br>
+    <span class="hl2">Особенно ведущего.</span>
+  </div>
+
+  <div class="aside-note">
+    * Шоу выходит ежедневно<br>
+    в Telegram.<br>
+    Время — когда получится.<br><br>
+    Это не баг.<br>
+    Это фича.
+  </div>
+</section>
+
+<!-- STRIP 2 -->
+<div class="strip">
+  <span class="strip-inner" style="animation-direction:reverse; animation-duration: 30s;">
+    ЧТО ПРОИСХОДИТ <span class="strip-dot">◆</span> НЕПОНЯТНО <span class="strip-dot">◆</span> НО ИНТЕРЕСНО <span class="strip-dot">◆</span> КТО ЭТИ ЛЮДИ <span class="strip-dot">◆</span> О ЧЁМ ОНИ ГОВОРЯТ <span class="strip-dot">◆</span> ХОРОШО ЧТО ВКЛЮЧИЛ <span class="strip-dot">◆</span> ЧТО ПРОИСХОДИТ <span class="strip-dot">◆</span> НЕПОНЯТНО <span class="strip-dot">◆</span> НО ИНТЕРЕСНО <span class="strip-dot">◆</span>
+  </span>
+</div>
+
+<!-- SCHEDULE / EPISODES -->
+<section id="schedule">
+  <p class="sched-label">Последние эфиры — или нет — неважно</p>
+
+  <div class="sched-row reveal">
+    <span class="sched-day">Пн</span>
+    <span class="sched-title">Почему гречка — это политика</span>
+    <span class="sched-tag live">● Был живым</span>
+  </div>
+  <div class="sched-row reveal" style="transition-delay:0.05s">
+    <span class="sched-day">Вт</span>
+    <span class="sched-title">Гость который перепутал дату</span>
+    <span class="sched-tag">Архив</span>
+  </div>
+  <div class="sched-row reveal" style="transition-delay:0.1s">
+    <span class="sched-day">Ср</span>
+    <span class="sched-title">43 минуты о ничём (рекорд)</span>
+    <span class="sched-tag">Архив</span>
+  </div>
+  <div class="sched-row reveal" style="transition-delay:0.15s">
+    <span class="sched-day">Чт</span>
+    <span class="sched-title">Интервью с человеком без мнений</span>
+    <span class="sched-tag">Архив</span>
+  </div>
+  <div class="sched-row reveal" style="transition-delay:0.2s">
+    <span class="sched-day">Сг</span>
+    <span class="sched-title">???</span>
+    <span class="sched-tag live">Скоро</span>
+  </div>
+
+</section>
+
+<!-- FINAL CTA -->
+<section id="final">
+  <div class="final-big reveal">
+    <span>ПОДПИШИСЬ.</span>
+    <span class="line2">Или не надо.</span>
+  </div>
+  <p class="final-sub reveal" style="transition-delay:0.2s">— но потом не говори что не знал</p>
+  <a href="https://t.me/funnyfoxer" class="final-btn reveal" style="transition-delay:0.35s">Открыть Telegram</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">FUNNY<span>FOX</span></div>
+  <div class="footer-note">🦊 · ежедневно · живо · непонятно</div>
+</footer>
+
+<script>
+  // Cursor
+  const cur = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .sched-row, .wtf-cell').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  reveals.forEach(r => io.observe(r));
+
+  // Random twitch on hero title
+  const fox = document.querySelector('.fox');
+  setInterval(() => {
+    fox.style.transform = `translateX(${(Math.random()-0.5)*6}px)`;
+    setTimeout(() => fox.style.transform = '', 80);
+  }, 3500 + Math.random()*2000);
+
+  // Absurd console messages
+  console.log('%c🦊 FUNNY FOX', 'font-size:32px; color:#D85A30; font-weight:bold');
+  console.log('%cЕсли ты читаешь это — ты уже часть шоу.', 'color:#888; font-size:14px');
+  console.log('%cПодпишись: t.me/funnyfoxer', 'color:#C8FF00; font-size:12px');
+</script>
+</body>
+   </html>    
