@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serega40in | AI Video Production</title>
+    <meta name="description" content="Профессиональное производство видеоконтента с помощью ИИ.">
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --dark: #0a0a0a;
+            --gray: #1a1a1a;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a0a0a;
+            color: #eee;
+            line-height: 1.6;
+        }
+        header {
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--primary);
+        }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://picsum.photos/id/1015/1920/1080') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .hero-content {
+            max-width: 800px;
+            padding: 2rem;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #00ffcc, #00ccaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            background: #fff;
+        }
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+        }
+        .video-card {
+            background: var(--gray);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .video-card:hover {
+            transform: translateY(-12px);
+        }
+        .video-card iframe {
+            width: 100%;
+            height: 240px;
+            border: none;
+        }
+        .video-card p {
+            padding: 15px;
+            font-weight: 500;
+            color: #ddd;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #000;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Serega40in</div>
+            <div>
+                <a href="#portfolio" class="btn" style="padding:8px 20px; font-size:0.95rem;">Портфолио</a>
+                <a href="#contact" class="btn" style="padding:8px 20px; font-size:0.95rem;">Контакты</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>AI Video Production</h1>
+            <p>Креативные видео с помощью искусственного интеллекта</p>
+            <a href="#portfolio" class="btn">Смотреть работы</a>
+            <a href="https://t.me/serega40in" target="_blank" class="btn" style="background:transparent; border:2px solid #00ffcc; color:#00ffcc;">Telegram</a>
+        </div>
+    </section>
+
+    <section id="portfolio" style="background:#111;">
+        <h2>Портфолио</h2>
+        <div class="portfolio-grid">
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/kq9xTMB2d4Q" allowfullscreen></iframe>
+                <p>AI Видео 1</p>
+            </div>
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/_QILfn6FUes" allowfullscreen></iframe>
+                <p>AI Видео 2</p>
+            </div>
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/aLWEu4g4tzk" allowfullscreen></iframe>
+                <p>AI Видео 3</p>
+            </div>
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/pJ81M3SPfMU" allowfullscreen></iframe>
+                <p>AI Видео 4</p>
+            </div>
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/0Zy3NkJFJ_s" allowfullscreen></iframe>
+                <p>Shorts — AI Аватар</p>
+            </div>
+
+            <div class="video-card">
+                <iframe src="https://www.youtube.com/embed/8T_elo4hIOQ" allowfullscreen></iframe>
+                <p>Shorts — AI Видео</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact" style="text-align:center; background:#111; padding:80px 20px;">
+        <h2>Давай делать крутой контент вместе</h2>
+        <p style="font-size:1.5rem; margin:30px 0;">
+            📞 <a href="tel:+79312024923" style="color:var(--primary); text-decoration:none;">+7 931 202-49-23</a><br><br>
+            💬 <a href="https://t.me/serega40in" target="_blank" style="color:var(--primary);">t.me/serega40in</a>
+        </p>
+    </section>
+
+    <footer>
+        © 2026 Serega40in • AI Video Production<br>
+        <small>Сайт на GitHub Pages</small>
+    </footer>
+
+</body>
+  </html>
