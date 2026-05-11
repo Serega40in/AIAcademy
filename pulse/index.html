@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puls</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #fafafa;
+    }
+    .accent { color: #1e3a8a; }
+    .post-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .post-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link.active:after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #1e3a8a;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="text-zinc-800 min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="border-b border-zinc-200 bg-white sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-10">
+        <h1 onclick="showPage('feed')" class="text-4xl font-bold tracking-tighter accent cursor-pointer">puls</h1>
+        
+        <div class="flex gap-8 text-[17px]">
+          <a onclick="showPage('feed')" class="nav-link cursor-pointer active" id="nav-feed">Лента</a>
+          <a onclick="showPage('create')" class="nav-link cursor-pointer" id="nav-create">Написать</a>
+          <a onclick="showPage('profile')" class="nav-link cursor-pointer" id="nav-profile">Профиль</a>
+        </div>
+      </div>
+      
+      <button onclick="showPage('create')" 
+              class="accent border border-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white px-6 py-2.5 rounded-2xl text-sm font-medium transition-all">
+        <i class="fas fa-plus mr-2"></i>Новая публикация
+      </button>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto px-6 pt-10 pb-20">
+
+    <!-- ЛЕНТА -->
+    <div id="page-feed" class="page">
+      <div class="text-center mb-16">
+        <h2 class="text-6xl font-light tracking-tighter mb-4">Чистые мысли</h2>
+        <p class="text-xl text-zinc-500">Платформа для глубокого контента</p>
+      </div>
+
+      <div class="space-y-16">
+        <div class="post-card bg-white border border-zinc-100 rounded-3xl overflow-hidden">
+          <img src="https://picsum.photos/id/1015/1200/600" class="w-full h-80 object-cover">
+          <div class="p-10">
+            <div class="uppercase text-xs tracking-widest text-[#1e3a8a] mb-3">Статья • 12 мин</div>
+            <h3 class="text-3xl font-semibold leading-tight mb-4">Как перестать потреблять и начать создавать</h3>
+            <p class="text-zinc-600 text-[17px] leading-relaxed">Мы живём в эпоху бесконечного потребления информации. Но настоящая ценность рождается только тогда, когда ты начинаешь отдавать...</p>
+            <div class="mt-8 flex items-center gap-4 text-sm text-zinc-500">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-zinc-200 rounded-full"></div>
+                <span>@serega40in</span>
+              </div>
+              <span>•</span>
+              <span>11 мая 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-card bg-white border border-zinc-100 rounded-3xl overflow-hidden">
+          <img src="https://picsum.photos/id/201/1200/600" class="w-full h-80 object-cover">
+          <div class="p-10">
+            <div class="uppercase text-xs tracking-widest text-amber-600 mb-3">Подкаст • 42 мин</div>
+            <h3 class="text-3xl font-semibold leading-tight mb-4">Разговор с самим собой: как я изменился за последний год</h3>
+            <div class="mt-8 flex items-center gap-4 text-sm text-zinc-500">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-zinc-200 rounded-full"></div>
+                <span>@serega40in</span>
+              </div>
+              <span>•</span>
+              <span>Сегодня</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- НАПИСАТЬ -->
+    <div id="page-create" class="page hidden">
+      <div class="max-w-3xl mx-auto">
+        <input id="title" type="text" placeholder="Заголовок..." 
+               class="w-full text-4xl font-light placeholder-zinc-300 focus:outline-none mb-10">
+
+        <div class="flex gap-3 mb-4">
+          <button onclick="aiHelp()" 
+                  class="flex items-center gap-2 px-5 py-3 bg-white border border-zinc-200 hover:border-[#1e3a8a] rounded-2xl text-sm">
+            <i class="fas fa-sparkles text-amber-500"></i>
+            <span>Попросить ИИ помочь</span>
+          </button>
+        </div>
+
+        <textarea id="content" rows="20" placeholder="Начни писать здесь... Или нажми кнопку выше, чтобы ИИ помог с первым черновиком."
+                  class="w-full p-8 text-lg border border-zinc-200 rounded-3xl focus:outline-none focus:border-[#1e3a8a] resize-none"></textarea>
+
+        <div class="flex justify-end mt-8">
+          <button onclick="publish()" 
+                  class="px-10 py-4 bg-[#1e3a8a] text-white rounded-2xl hover:bg-blue-900 transition-colors">
+            Опубликовать
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ПРОФИЛЬ -->
+    <div id="page-profile" class="page hidden text-center">
+      <div class="max-w-md mx-auto">
+        <div class="w-28 h-28 mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center text-6xl text-white mb-6">
+          SS
+        </div>
+        <h2 class="text-3xl font-semibold">Сергей Сорокин</h2>
+        <p class="text-zinc-500">@serega40in</p>
+        
+        <div class="mt-10 grid grid-cols-3 gap-6">
+          <div><div class="text-3xl font-semibold">17</div><div class="text-xs text-zinc-500">Публикаций</div></div>
+          <div><div class="text-3xl font-semibold">312</div><div class="text-xs text-zinc-500">Читателей</div></div>
+          <div><div class="text-3xl font-semibold">∞</div><div class="text-xs text-zinc-500">Пульсов</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`page-${page}`).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      document.getElementById(`nav-${page}`).classList.add('active');
+    }
+
+    function publish() {
+      const title = document.getElementById('title').value;
+      if (title.trim() === '') {
+        alert("Напишите заголовок перед публикацией");
+        return;
+      }
+      alert(`✅ Публикация "${title}" успешно опубликована!`);
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      showPage('feed');
+    }
+
+    function aiHelp() {
+      const content = document.getElementById('content');
+      content.value = "ИИ-агент думает...\n\nВот несколько идей для твоей статьи:\n\n1. Введение, которое сразу цепляет\n2. Главная мысль + личная история\n3. Практические шаги\n4. Возможные возражения и ответы на них\n\nХочешь, я продолжу развивать какой-то из пунктов?";
+    }
+
+    window.onload = () => showPage('feed');
+  </script>
+</body>
+</html>
