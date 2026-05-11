@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-background: #0a0a0a;
+  --color-foreground: #f4f4f5;
+  --color-muted: #171717;
+  --color-accent: #6366f1;
+}
+
+body {
+  font-feature-settings: "kern" 1, "ss01" 1;
+}
+
+.post-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
