@@ -5,8 +5,8 @@
 // 2. Settings → API → скопируй URL и anon key
 // 3. Вставь сюда
 
-const SUPABASE_URL  = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON = 'YOUR_ANON_KEY';
+const SUPABASE_URL  = 'https://bilivmphgfzrsqpwygfk.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_NYdSkTt4qkJf0fwpl51fdA_dX7dMkGg';
 
 // Claude API key для ИИ-помощника
 const CLAUDE_API_KEY = 'YOUR_CLAUDE_API_KEY';
