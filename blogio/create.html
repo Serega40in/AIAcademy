@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Написать — Blogio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Mulish:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:#1B2A4A; --ink2:#2D4A8A; --muted:#6B7E9F;
+      --border:#E2E8F0; --bg:#FFFFFF; --card:#F8FAFD;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--ink); font-family:'Mulish',sans-serif; min-height:100vh; }
+
+    nav {
+      position:sticky; top:0; z-index:100;
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border); padding:0 24px;
+      display:flex; align-items:center; justify-content:space-between; height:60px;
+    }
+    .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--ink); text-decoration:none; }
+    .logo span { color:var(--ink2); }
+    .btn { padding:8px 20px; border-radius:6px; font-family:'Mulish',sans-serif; font-size:0.875rem; font-weight:600; cursor:pointer; transition:all .2s; border:none; }
+    .btn-solid { background:var(--ink); color:#fff; }
+    .btn-solid:hover { background:var(--ink2); }
+    .btn-outline { border:1.5px solid var(--border); color:var(--muted); background:transparent; }
+    .btn-outline:hover { border-color:var(--ink2); color:var(--ink2); }
+
+    /* LAYOUT */
+    .page { display:grid; grid-template-columns:1fr 340px; gap:0; min-height:calc(100vh - 60px); }
+
+    /* EDITOR */
+    .editor { padding:48px 48px 80px; border-right:1px solid var(--border); }
+    .editor-label { font-size:0.75rem; font-weight:600; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+
+    #titleInput {
+      width:100%; border:none; outline:none; resize:none;
+      font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700;
+      color:var(--ink); line-height:1.2; margin-bottom:24px;
+      placeholder-color:var(--muted);
+    }
+    #titleInput::placeholder { color:var(--border); }
+
+    #contentArea {
+      width:100%; min-height:320px; border:none; outline:none; resize:none;
+      font-family:'Mulish',sans-serif; font-size:1rem; line-height:1.8;
+      color:var(--ink);
+    }
+    #contentArea::placeholder { color:var(--muted); }
+
+    .divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+
+    /* IMAGE UPLOAD */
+    .upload-box {
+      border:2px dashed var(--border); border-radius:10px;
+      padding:24px; text-align:center; cursor:pointer;
+      transition:border-color .2s; margin-bottom:16px;
+    }
+    .upload-box:hover { border-color:var(--ink2); }
+    .upload-box p { color:var(--muted); font-size:0.9rem; }
+    #imagePreview { width:100%; border-radius:8px; margin-top:12px; display:none; }
+    #imageInput { display:none; }
+
+    /* YOUTUBE */
+    .yt-wrap { display:flex; gap:8px; margin-bottom:16px; }
+    .yt-wrap input {
+      flex:1; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px;
+      font-family:'Mulish',sans-serif; font-size:0.9rem; color:var(--ink); outline:none;
+    }
+    .yt-wrap input:focus { border-color:var(--ink2); }
+    #ytPreview { width:100%; aspect-ratio:16/9; border-radius:8px; display:none; border:none; }
+
+    /* AI PANEL */
+    .ai-panel { padding:24px; background:var(--card); display:flex; flex-direction:column; height:100%; }
+    .ai-header { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+    .ai-dot { width:10px; height:10px; border-radius:50%; background:#4CAF50; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .ai-header h3 { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--ink); }
+    .ai-header span { font-size:0.75rem; color:var(--muted); }
+
+    .ai-chat { flex:1; overflow-y:auto; margin-bottom:16px; display:flex; flex-direction:column; gap:12px; min-height:300px; }
+    .bubble {
+      max-width:90%; padding:12px 16px; border-radius:12px; font-size:0.875rem; line-height:1.6;
+    }
+    .bubble.ai {
+      background:#fff; border:1px solid var(--border); color:var(--ink);
+      align-self:flex-start; border-radius:4px 12px 12px 12px;
+    }
+    .bubble.user {
+      background:var(--ink); color:#fff;
+      align-self:flex-end; border-radius:12px 4px 12px 12px;
+    }
+    .ai-input-row { display:flex; gap:8px; }
+    #aiInput {
+      flex:1; padding:10px 14px; border:1.5px solid var(--border);
+      border-radius:8px; font-family:'Mulish',sans-serif; font-size:0.875rem;
+      color:var(--ink); outline:none; resize:none; min-height:44px; max-height:120px;
+    }
+    #aiInput:focus { border-color:var(--ink2); }
+    .ai-send {
+      padding:10px 16px; background:var(--ink2); color:#fff;
+      border:none; border-radius:8px; cursor:pointer; font-size:1.1rem;
+      transition:background .2s; flex-shrink:0;
+    }
+    .ai-send:hover { background:var(--ink); }
+    .ai-send:disabled { opacity:.4; cursor:not-allowed; }
+
+    .ai-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+    .suggestion {
+      font-size:0.75rem; padding:5px 12px; border-radius:20px;
+      border:1px solid var(--border); color:var(--ink2); cursor:pointer;
+      background:#fff; transition:all .2s; white-space:nowrap;
+    }
+    .suggestion:hover { background:var(--ink2); color:#fff; border-color:var(--ink2); }
+
+    /* PUBLISH BAR */
+    .publish-bar {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid var(--border);
+      padding:14px 32px; display:flex; align-items:center; gap:16px;
+      z-index:50;
+    }
+    .publish-bar .hint { color:var(--muted); font-size:0.85rem; flex:1; }
+    #publishStatus { font-size:0.85rem; color:var(--muted); }
+
+    /* LOADING */
+    .typing { display:flex; gap:4px; align-items:center; padding:12px 16px; }
+    .dot { width:6px; height:6px; border-radius:50%; background:var(--muted); animation:bounce .8s infinite; }
+    .dot:nth-child(2) { animation-delay:.2s; }
+    .dot:nth-child(3) { animation-delay:.4s; }
+    @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+    @media(max-width:768px) {
+      .page { grid-template-columns:1fr; }
+      .ai-panel { display:none; }
+      .editor { padding:24px 20px 100px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">Blog<span>io</span></a>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span id="autoSave" style="font-size:0.8rem;color:var(--muted)"></span>
+    <button class="btn btn-outline" onclick="history.back()">← Назад</button>
+    <button class="btn btn-solid" onclick="publishPost()">Опубликовать</button>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- EDITOR -->
+  <div class="editor">
+    <textarea id="titleInput" rows="2" placeholder="Заголовок публикации..."></textarea>
+    <textarea id="contentArea" rows="20" placeholder="Начни писать или попроси ИИ помочь →"></textarea>
+    <hr class="divider">
+
+    <!-- IMAGE -->
+    <div class="editor-label">Обложка</div>
+    <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+      <p>📷 Нажми чтобы загрузить картинку</p>
+      <img id="imagePreview" alt="preview">
+    </div>
+    <input type="file" id="imageInput" accept="image/*" onchange="handleImage(this)">
+
+    <!-- YOUTUBE -->
+    <div class="editor-label">YouTube видео</div>
+    <div class="yt-wrap">
+      <input type="url" id="ytUrl" placeholder="https://youtube.com/watch?v=..." oninput="previewYT(this.value)">
+      <button class="btn btn-outline" onclick="previewYT(document.getElementById('ytUrl').value)">Добавить</button>
+    </div>
+    <iframe id="ytPreview" allowfullscreen></iframe>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel">
+    <div class="ai-header">
+      <div class="ai-dot"></div>
+      <h3>ИИ-помощник</h3>
+      <span>Claude</span>
+    </div>
+
+    <div class="ai-suggestions">
+      <span class="suggestion" onclick="askAI('Напиши введение к моей статье')">✍️ Введение</span>
+      <span class="suggestion" onclick="askAI('Предложи 5 заголовков для этой темы')">💡 Заголовки</span>
+      <span class="suggestion" onclick="askAI('Улучши текст — сделай его живее')">✨ Улучшить</span>
+      <span class="suggestion" onclick="askAI('Напиши заключение')">🏁 Заключение</span>
+      <span class="suggestion" onclick="askAI('Раздели на абзацы с подзаголовками')">📑 Структура</span>
+    </div>
+
+    <div class="ai-chat" id="aiChat">
+      <div class="bubble ai">
+        Привет! Я помогу написать твою публикацию. Расскажи о чём хочешь написать — или выбери подсказку выше 👆
+      </div>
+    </div>
+
+    <div class="ai-input-row">
+      <textarea id="aiInput" placeholder="Спроси что угодно..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}"
+        oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+      <button class="ai-send" id="aiSendBtn" onclick="sendAI()">↑</button>
+    </div>
+  </div>
+</div>
+
+<div class="publish-bar">
+  <span class="hint">Публикация будет видна всем в ленте</span>
+  <span id="publishStatus"></span>
+  <button class="btn btn-solid" onclick="publishPost()">Опубликовать →</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script>
+// AUTH CHECK
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { alert('Войди чтобы писать'); location.href = '/'; }
+})();
+
+// IMAGE PREVIEW
+function handleImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('imagePreview');
+    img.src = e.target.result; img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// YOUTUBE
+function previewYT(url) {
+  if (!url) return;
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (!match) return;
+  const iframe = document.getElementById('ytPreview');
+  iframe.src = `https://www.youtube.com/embed/${match[1]}`;
+  iframe.style.display = 'block';
+}
+
+// AI CHAT
+let chatHistory = [];
+
+function addBubble(text, role) {
+  const chat = document.getElementById('aiChat');
+  const div = document.createElement('div');
+  div.className = `bubble ${role}`;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const chat = document.getElementById('aiChat');
+  const div = document.createElement('div');
+  div.className = 'bubble ai';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+async function sendAI() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  askAI(msg);
+  input.value = ''; input.style.height = 'auto';
+}
+
+async function askAI(userMsg) {
+  const title   = document.getElementById('titleInput').value;
+  const content = document.getElementById('contentArea').value;
+
+  addBubble(userMsg, 'user');
+  const btn = document.getElementById('aiSendBtn');
+  btn.disabled = true;
+  showTyping();
+
+  chatHistory.push({ role: 'user', content: userMsg });
+
+  const systemPrompt = `Ты помощник для написания блог-публикаций на платформе Blogio.
+Текущий черновик:
+Заголовок: ${title || '(не задан)'}
+Текст: ${content || '(пусто)'}
+
+Помогай автору писать интересные публикации. Пиши на русском. Будь кратким и конкретным.
+Если генерируешь текст для вставки — дай только готовый текст без объяснений.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: chatHistory
+      })
+    });
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || 'Ошибка ответа';
+    chatHistory.push({ role: 'assistant', content: reply });
+    removeTyping();
+    const bubble = addBubble(reply, 'ai');
+
+    // Add "Insert" button if looks like content
+    if (reply.length > 80) {
+      const insertBtn = document.createElement('button');
+      insertBtn.textContent = '↓ Вставить в статью';
+      insertBtn.style.cssText = 'display:block;margin-top:8px;padding:6px 12px;font-size:0.75rem;background:var(--ink2);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:Mulish,sans-serif;';
+      insertBtn.onclick = () => {
+        const ca = document.getElementById('contentArea');
+        ca.value += (ca.value ? '\n\n' : '') + reply;
+        insertBtn.textContent = '✓ Вставлено';
+        insertBtn.disabled = true;
+      };
+      bubble.appendChild(insertBtn);
+    }
+  } catch(e) {
+    removeTyping();
+    addBubble('Ошибка соединения. Проверь API ключ в config.js', 'ai');
+  }
+  btn.disabled = false;
+}
+
+// PUBLISH
+function slugify(text) {
+  return text.toLowerCase()
+    .replace(/[а-яёa-z0-9]+/gi, m => {
+      const map = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'.split('');
+      const lat = 'abvgdeezziyklmnoprstufhtschshyeyuya'.split('');
+      return m.split('').map(c => {
+        const i = map.indexOf(c);
+        return i >= 0 ? lat[Math.min(i,lat.length-1)] : c;
+      }).join('');
+    })
+    .replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').slice(0,60)
+    + '-' + Date.now().toString(36);
+}
+
+async function publishPost() {
+  const title   = document.getElementById('titleInput').value.trim();
+  const content = document.getElementById('contentArea').value.trim();
+  if (!title) return alert('Добавь заголовок');
+  if (!content) return alert('Напиши что-нибудь');
+
+  const status = document.getElementById('publishStatus');
+  status.textContent = 'Публикуем...';
+
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return alert('Войди снова');
+
+  // Upload image if exists
+  let imageUrl = null;
+  const imgFile = document.getElementById('imageInput').files[0];
+  if (imgFile) {
+    const ext  = imgFile.name.split('.').pop();
+    const path = `${session.user.id}/${Date.now()}.${ext}`;
+    const { data: up, error: ue } = await supabase.storage
+      .from('images').upload(path, imgFile);
+    if (!ue) {
+      const { data: url } = supabase.storage.from('images').getPublicUrl(path);
+      imageUrl = url.publicUrl;
+    }
+  }
+
+  const ytUrl   = document.getElementById('ytUrl').value.trim();
+  const slug    = slugify(title);
+
+  const { data, error } = await supabase.from('posts').insert({
+    user_id:   session.user.id,
+    title,
+    content,
+    image_url: imageUrl,
+    youtube_url: ytUrl || null,
+    slug,
+    published: true
+  }).select().single();
+
+  if (error) { status.textContent = 'Ошибка: ' + error.message; return; }
+  location.href = `post.html?slug=${slug}`;
+}
+</script>
+</body>
+</html>

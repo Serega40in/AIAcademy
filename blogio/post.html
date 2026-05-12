@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Mulish:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#1B2A4A; --ink2:#2D4A8A; --muted:#6B7E9F; --border:#E2E8F0; --bg:#FFFFFF; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--ink); font-family:'Mulish',sans-serif; }
+
+    nav {
+      position:sticky; top:0; z-index:100;
+      background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border); padding:0 24px;
+      display:flex; align-items:center; justify-content:space-between; height:60px;
+    }
+    .logo { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--ink); text-decoration:none; }
+    .logo span { color:var(--ink2); }
+    .btn { padding:8px 20px; border-radius:6px; font-family:'Mulish',sans-serif; font-size:0.875rem; font-weight:600; cursor:pointer; transition:all .2s; text-decoration:none; border:1.5px solid var(--border); color:var(--muted); background:transparent; display:inline-block; }
+    .btn:hover { border-color:var(--ink2); color:var(--ink2); }
+
+    .article { max-width:680px; margin:0 auto; padding:56px 24px 100px; }
+
+    .meta { display:flex; align-items:center; gap:12px; margin-bottom:32px; }
+    .avatar { width:44px; height:44px; border-radius:50%; background:var(--ink2); color:#fff; display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; flex-shrink:0; }
+    .author { font-weight:600; font-size:1rem; color:var(--ink); }
+    .date { font-size:0.85rem; color:var(--muted); }
+
+    h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(1.8rem, 4vw, 2.8rem);
+      font-weight:700; line-height:1.2;
+      color:var(--ink); margin-bottom:32px;
+    }
+
+    .cover { width:100%; border-radius:12px; margin-bottom:40px; max-height:420px; object-fit:cover; display:none; }
+
+    .body-text {
+      font-size:1.05rem; line-height:1.85; color:var(--ink);
+      white-space:pre-wrap; word-break:break-word;
+    }
+
+    .yt-frame { width:100%; aspect-ratio:16/9; border-radius:12px; border:none; margin-top:40px; display:none; }
+
+    .share-row { margin-top:48px; padding-top:32px; border-top:1px solid var(--border); display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .share-row span { color:var(--muted); font-size:0.9rem; }
+    .share-btn { padding:8px 18px; border-radius:20px; border:1.5px solid var(--border); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all .2s; background:#fff; color:var(--ink); }
+    .share-btn:hover { background:var(--ink); color:#fff; border-color:var(--ink); }
+
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:0.9rem; text-decoration:none; margin-bottom:32px; }
+    .back-link:hover { color:var(--ink2); }
+
+    .not-found { text-align:center; padding:80px 20px; }
+    .not-found h2 { font-family:'Playfair Display',serif; font-size:2rem; color:var(--ink); margin-bottom:12px; }
+    .not-found p { color:var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/">Blog<span>io</span></a>
+  <a class="btn" href="/">← Лента</a>
+</nav>
+
+<article class="article" id="article">
+  <div style="text-align:center;padding:60px;color:var(--muted)">Загрузка...</div>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script>
+async function loadPost() {
+  const slug = new URLSearchParams(location.search).get('slug');
+  if (!slug) return showNotFound();
+
+  const { data: post, error } = await supabase
+    .from('posts')
+    .select('*, profiles(name)')
+    .eq('slug', slug)
+    .eq('published', true)
+    .single();
+
+  if (error || !post) return showNotFound();
+
+  document.title = post.title + ' — Blogio';
+
+  const name     = post.profiles?.name || 'Аноним';
+  const initials = name.slice(0,2).toUpperCase();
+  const date     = new Date(post.created_at).toLocaleDateString('ru-RU', { day:'numeric', month:'long', year:'numeric' });
+  const imgTag   = post.image_url ? `<img class="cover" src="${post.image_url}" id="coverImg" alt="">` : '';
+  const ytTag    = post.youtube_url ? `<iframe class="yt-frame" id="ytFrame" src="${getYTEmbed(post.youtube_url)}" allowfullscreen></iframe>` : '';
+  const shareUrl = encodeURIComponent(location.href);
+
+  document.getElementById('article').innerHTML = `
+    <a class="back-link" href="/">← Все публикации</a>
+    <div class="meta">
+      <div class="avatar">${initials}</div>
+      <div>
+        <div class="author">${name}</div>
+        <div class="date">${date}</div>
+      </div>
+    </div>
+    <h1>${post.title}</h1>
+    ${imgTag}
+    <div class="body-text">${post.content}</div>
+    ${ytTag}
+    <div class="share-row">
+      <span>Поделиться:</span>
+      <button class="share-btn" onclick="navigator.clipboard.writeText(location.href);this.textContent='✓ Скопировано'">🔗 Ссылка</button>
+      <a class="share-btn" href="https://t.me/share/url?url=${shareUrl}&text=${encodeURIComponent(post.title)}" target="_blank">✈️ Telegram</a>
+    </div>
+  `;
+
+  // Show image
+  const img = document.getElementById('coverImg');
+  if (img) img.style.display = 'block';
+
+  // Show YT
+  const yt = document.getElementById('ytFrame');
+  if (yt) yt.style.display = 'block';
+}
+
+function getYTEmbed(url) {
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+}
+
+function showNotFound() {
+  document.getElementById('article').innerHTML = `
+    <div class="not-found">
+      <h2>Публикация не найдена</h2>
+      <p>Возможно она была удалена или ссылка неверна</p>
+      <br>
+      <a class="btn" href="/" style="margin-top:16px">← Вернуться в ленту</a>
+    </div>`;
+}
+
+loadPost();
+</script>
+</body>
+</html>
