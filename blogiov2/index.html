@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogio — Пиши просто</title>
+  <style>
+    :root { --ink: #1a1a2e; --accent: #4a9eff; }
+    body { margin:0; font-family: 'Segoe UI', sans-serif; background: #f8f9fa; color: var(--ink); line-height: 1.6; }
+    header { background: white; padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 1.8rem; font-weight: 700; color: var(--ink); }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: white; }
+    .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    .post { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .title { font-size: 1.6rem; margin: 0 0 0.5rem; }
+    .meta { color: #666; font-size: 0.9rem; }
+    textarea, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; font-family: inherit; }
+    button { margin: 5px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Blogio</div>
+  <div>
+    <button class="btn" onclick="login()">👤 Войти</button>
+    <button class="btn btn-primary" onclick="showCreate()">✍️ Написать</button>
+  </div>
+</header>
+
+<div class="container">
+  <h1 style="text-align:center; margin-bottom:2rem;">Пиши. Делись. Вдохновляйся.</h1>
+  <div id="feed"></div>
+</div>
+
+<!-- Create Modal -->
+<div id="createModal" class="modal">
+  <div class="modal-content">
+    <h2>Новый пост</h2>
+    <input type="text" id="postTitle" placeholder="Заголовок">
+    <textarea id="postContent" rows="8" placeholder="Что хочешь рассказать?"></textarea>
+    <input type="text" id="ytUrl" placeholder="YouTube ссылка (необязательно)">
+    <button class="btn btn-primary" onclick="publishPost()">Опубликовать</button>
+    <button class="btn" onclick="hideCreate()">Отмена</button>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h2>Представься</h2>
+    <input type="text" id="username" placeholder="Твоё имя" value="Алексей">
+    <button class="btn btn-primary" onclick="saveUser()">Войти</button>
+  </div>
+</div>
+
+<script>
+// Gemini API Key — вставь свой
+const GEMINI_API_KEY = "YOUR_GEMINI_KEY"; // ← Замени на свой ключ
+
+let currentUser = localStorage.getItem('blogio_user') || null;
+let posts = JSON.parse(localStorage.getItem('blogio_posts')) || [];
+
+function renderFeed() {
+  const feed = document.getElementById('feed');
+  feed.innerHTML = posts.length === 0 ? 
+    '<p style="text-align:center; color:#888;">Пока нет публикаций. Будь первым!</p>' : 
+    posts.map(post => `
+      <div class="post">
+        <h2 class="title">${post.title}</h2>
+        <div class="meta">Автор: ${post.author} • ${new Date(post.date).toLocaleDateString('ru-RU')}</div>
+        <p>${post.content.substring(0, 200)}${post.content.length > 200 ? '...' : ''}</p>
+        ${post.yt ? `<iframe width="100%" height="315" src="${post.yt.replace('watch?v=', 'embed/')}" frameborder="0" allowfullscreen></iframe>` : ''}
+      </div>
+    `).join('');
+}
+
+function showCreate() {
+  if (!currentUser) return alert('Сначала войди');
+  document.getElementById('createModal').style.display = 'flex';
+}
+
+function hideCreate() {
+  document.getElementById('createModal').style.display = 'none';
+}
+
+async function publishPost() {
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  const yt = document.getElementById('ytUrl').value.trim();
+
+  if (!title || !content) return alert('Заполни заголовок и текст');
+
+  posts.unshift({
+    id: Date.now(),
+    title,
+    content,
+    author: currentUser,
+    date: new Date().toISOString(),
+    yt: yt
+  });
+
+  localStorage.setItem('blogio_posts', JSON.stringify(posts));
+  hideCreate();
+  renderFeed();
+  alert('Пост опубликован!');
+}
+
+function login() {
+  document.getElementById('loginModal').style.display = 'flex';
+}
+
+function saveUser() {
+  const name = document.getElementById('username').value.trim() || 'Аноним';
+  currentUser = name;
+  localStorage.setItem('blogio_user', name);
+  document.getElementById('loginModal').style.display = 'none';
+  alert(`Добро пожаловать, ${name}!`);
+}
+
+// Init
+renderFeed();
+if (currentUser) console.log(`Привет, ${currentUser}`);
+</script>
+
+</body>
+</html>
