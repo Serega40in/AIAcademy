@@ -1,35 +1,28 @@
-# Blogio — MVP
+# Blogio — MVP (полностью бесплатный стек)
 
-## Структура файлов
+## Стек
 ```
-index.html      — лента публикаций + авторизация
-create.html     — редактор + ИИ-помощник
-post.html       — страница публикации
-js/config.js    — СЮДА ВСТАВИТЬ КЛЮЧИ
-js/auth.js      — логика авторизации
-js/feed.js      — загрузка ленты
-netlify.toml    — конфиг деплоя
+GitHub Pages   — фронтенд       (бесплатно навсегда)
+Supabase       — база + auth + storage  (бесплатно)
+Gemini API     — ИИ-помощник    (1500 req/день бесплатно)
 ```
 
 ---
 
 ## 🚀 Запуск за 3 шага
 
-### 1. Supabase — создай проект
+### Шаг 1 — Supabase
 
-Зайди на https://supabase.com → New project
-
-**Выполни в SQL Editor (Database → SQL Editor → New query):**
+1. Зайди на https://supabase.com → New project
+2. Database → SQL Editor → New query → вставь и выполни:
 
 ```sql
--- Таблица профилей
 create table profiles (
   id uuid references auth.users primary key,
   name text,
   created_at timestamptz default now()
 );
 
--- Автосоздание профиля при регистрации
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
@@ -43,7 +36,6 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Таблица постов
 create table posts (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references auth.users not null,
@@ -56,7 +48,6 @@ create table posts (
   created_at timestamptz default now()
 );
 
--- RLS политики
 alter table posts enable row level security;
 alter table profiles enable row level security;
 
@@ -64,39 +55,50 @@ create policy "Posts are public" on posts for select using (published = true);
 create policy "Users insert own posts" on posts for insert with check (auth.uid() = user_id);
 create policy "Profiles are public" on profiles for select using (true);
 
--- Storage для картинок
 insert into storage.buckets (id, name, public) values ('images', 'images', true);
 create policy "Anyone can upload images" on storage.objects for insert with check (bucket_id = 'images');
 create policy "Images are public" on storage.objects for select using (bucket_id = 'images');
 ```
 
-### 2. Заполни js/config.js
-
-```js
-const SUPABASE_URL  = 'https://xxxxxx.supabase.co';   // Settings → API
-const SUPABASE_ANON = 'eyJxxxxxx...';                   // anon public key
-const CLAUDE_API_KEY = 'sk-ant-xxxxxx';                 // console.anthropic.com
-```
-
-### 3. Деплой на Netlify
-
-**Вариант А — через GitHub:**
-1. Залей папку в репозиторий GitHub
-2. Netlify → Add new site → Import from Git
-3. Build command: (пусто)
-4. Publish directory: `.`
-5. Deploy!
-
-**Вариант Б — перетащи папку:**
-Netlify → Sites → перетащи папку `blog` прямо в браузер
+3. Settings → API → скопируй **Project URL** и **anon public key**
 
 ---
 
-## ✅ Что работает в MVP
+### Шаг 2 — Gemini API (бесплатно)
+
+1. Зайди на https://aistudio.google.com
+2. Нажми **Get API key** → Create API key
+3. Скопируй ключ
+
+---
+
+### Шаг 3 — Заполни js/config.js
+
+```js
+const SUPABASE_URL   = 'https://xxxxxx.supabase.co';
+const SUPABASE_ANON  = 'eyJxxxxxx...';
+const GEMINI_API_KEY = 'AIzaSyxxxxxx';
+```
+
+---
+
+### Шаг 4 — Деплой на GitHub Pages
+
+1. Залей папку в репозиторий GitHub (например `serega40in/blogio`)
+2. Settings → Pages → Source: **Deploy from branch**
+3. Branch: `main`, folder: `/ (root)` → Save
+4. Через минуту сайт живёт на `https://serega40in.github.io/blogio/`
+
+> ⚠️ Supabase: добавь свой GitHub Pages URL в
+> Authentication → URL Configuration → Site URL
+
+---
+
+## ✅ Что работает
 
 - Регистрация / вход по email
-- Создание публикации (текст + картинка + YouTube)
-- ИИ-помощник прямо в редакторе (Claude)
+- Создание поста: текст + картинка + YouTube embed
+- ИИ-помощник на Gemini (бесплатно)
 - Публичная страница по ссылке
 - Лента всех публикаций
 - Поделиться в Telegram

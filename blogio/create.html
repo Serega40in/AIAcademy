@@ -298,18 +298,33 @@ async function askAI(userMsg) {
 Если генерируешь текст для вставки — дай только готовый текст без объяснений.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory
-      })
-    });
+    // Gemini формат: история + системный промпт внутри первого user-сообщения
+    const geminiMessages = [
+      { role: 'user', parts: [{ text: systemPrompt + '\n\nПользователь: ' + userMsg }] }
+    ];
+    // Добавляем историю (кроме последнего — он уже внутри)
+    const history = chatHistory.slice(0, -1).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+    const fullMessages = history.length
+      ? [...history, { role: 'user', parts: [{ text: userMsg }] }]
+      : geminiMessages;
+
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: fullMessages,
+          generationConfig: { maxOutputTokens: 1000 }
+        })
+      }
+    );
     const data = await resp.json();
-    const reply = data.content?.[0]?.text || 'Ошибка ответа';
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Ошибка ответа';
     chatHistory.push({ role: 'assistant', content: reply });
     removeTyping();
     const bubble = addBubble(reply, 'ai');
