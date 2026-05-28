@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Клетка Возрождения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ink: #1a1814;
+    --paper: #f5f0e8;
+    --mist: #c8bfaa;
+    --deep: #2e2a24;
+    --accent: #7a6e5f;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', 'Noto Serif SC', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.9;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* Ink circle decoration */
+  .circle-bg {
+    position: fixed;
+    width: 60vw;
+    height: 60vw;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(122,110,95,0.12);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .circle-bg::before {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    border: 1px solid rgba(122,110,95,0.08);
+  }
+  .circle-bg::after {
+    content: '';
+    position: absolute;
+    inset: 40%;
+    border-radius: 50%;
+    border: 1px solid rgba(122,110,95,0.06);
+  }
+
+  section { position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .hero-glyph {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 3rem;
+    opacity: 0.45;
+    animation: breathe 6s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.45; }
+    50% { transform: scale(1.06); opacity: 0.65; }
+  }
+
+  .hero-title {
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-top: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mist);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    animation: fadeUp 2s ease-in-out infinite;
+  }
+
+  .scroll-hint svg { width: 16px; opacity: 0.5; }
+
+  @keyframes fadeUp {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+    50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.3;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--accent); }
+  .divider-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+
+  /* ESSENCE */
+  .essence {
+    padding: 8rem 2rem;
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .essence-quote {
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--deep);
+    margin-bottom: 3rem;
+  }
+
+  .essence-body {
+    font-size: 1.05rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    line-height: 2;
+  }
+
+  /* PILLARS */
+  .pillars {
+    padding: 6rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 3rem 2rem;
+    margin-top: 4rem;
+  }
+
+  .pillar {
+    text-align: center;
+  }
+
+  .pillar-num {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 1rem;
+  }
+
+  .pillar-title {
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--deep);
+    margin-bottom: 0.75rem;
+  }
+
+  .pillar-text {
+    font-size: 0.9rem;
+    color: var(--accent);
+    line-height: 1.8;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 1rem;
+  }
+
+  /* FORMAT */
+  .format {
+    padding: 6rem 2rem;
+    background: rgba(26,24,20,0.03);
+  }
+
+  .format-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .format-list {
+    list-style: none;
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .format-list li {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1rem;
+    color: var(--deep);
+  }
+
+  .format-list li::before {
+    content: '—';
+    color: var(--mist);
+    flex-shrink: 0;
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: 8rem 2rem 6rem;
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-heading {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--deep);
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-sub {
+    font-size: 0.9rem;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    margin-bottom: 3.5rem;
+  }
+
+  .btn-join {
+    display: inline-block;
+    padding: 1rem 3rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-join::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: translateY(100%);
+    transition: transform 0.35s ease;
+  }
+
+  .btn-join span {
+    position: relative;
+    z-index: 1;
+    transition: color 0.35s ease;
+  }
+
+  .btn-join:hover::before { transform: translateY(0); }
+  .btn-join:hover span { color: var(--paper); }
+
+  /* CONTACT */
+  .contact {
+    padding: 4rem 2rem 8rem;
+    text-align: center;
+  }
+
+  .contact-phone {
+    display: block;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--deep);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+    transition: color 0.3s;
+  }
+
+  .contact-phone:hover { color: var(--accent); }
+
+  .contact-hint {
+    font-size: 0.8rem;
+    color: var(--mist);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(122,110,95,0.15);
+  }
+
+  footer p {
+    font-size: 0.75rem;
+    color: var(--mist);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* FADE IN */
+  [data-fade] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  [data-fade].visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 480px) {
+    .hero { padding: 3rem 1.5rem 5rem; }
+    .pillars-grid { gap: 2.5rem 1.5rem; }
+    .btn-join { padding: 0.85rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="circle-bg"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="hero-glyph" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="30" stroke="#2e2a24" stroke-width="0.75"/>
+    <circle cx="32" cy="32" r="18" stroke="#2e2a24" stroke-width="0.5"/>
+    <circle cx="32" cy="32" r="5" fill="#2e2a24" opacity="0.6"/>
+    <line x1="32" y1="2" x2="32" y2="14" stroke="#2e2a24" stroke-width="0.5"/>
+    <line x1="32" y1="50" x2="32" y2="62" stroke="#2e2a24" stroke-width="0.5"/>
+    <line x1="2" y1="32" x2="14" y2="32" stroke="#2e2a24" stroke-width="0.5"/>
+    <line x1="50" y1="32" x2="62" y2="32" stroke="#2e2a24" stroke-width="0.5"/>
+    <line x1="11.5" y1="11.5" x2="19.5" y2="19.5" stroke="#2e2a24" stroke-width="0.4"/>
+    <line x1="44.5" y1="44.5" x2="52.5" y2="52.5" stroke="#2e2a24" stroke-width="0.4"/>
+    <line x1="52.5" y1="11.5" x2="44.5" y2="19.5" stroke="#2e2a24" stroke-width="0.4"/>
+    <line x1="19.5" y1="44.5" x2="11.5" y2="52.5" stroke="#2e2a24" stroke-width="0.4"/>
+  </svg>
+
+  <h1 class="hero-title">Клетка<br><em>Возрождения</em></h1>
+  <p class="hero-sub">Омоложение изнутри</p>
+
+  <div class="scroll-hint">
+    <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1">
+      <rect x="1" y="1" width="14" height="22" rx="7"/>
+      <line x1="8" y1="5" x2="8" y2="10"/>
+    </svg>
+    Прокрутить
+  </div>
+</section>
+
+<!-- ESSENCE -->
+<section class="essence" data-fade>
+  <div class="section-label">О практике</div>
+  <p class="essence-quote">
+    «Истинная молодость рождается<br>не снаружи — она восходит<br>из глубины тишины»
+  </p>
+  <p class="essence-body">
+    Без диет. Без препаратов. Без косметики.<br>
+    Только внутренние тайные практики —<br>
+    древнее знание, пробуждающее<br>жизненную силу клетки.
+  </p>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+<!-- PILLARS -->
+<section class="pillars" data-fade>
+  <div class="section-label">Три начала</div>
+  <div class="pillars-grid">
+    <div class="pillar">
+      <div class="pillar-num">I</div>
+      <div class="pillar-title">Дыхание</div>
+      <p class="pillar-text">Пробуждение жизненных токов через осознанное управление праной</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">II</div>
+      <div class="pillar-title">Тишина</div>
+      <p class="pillar-text">Медитативные состояния, останавливающие старение на клеточном уровне</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">III</div>
+      <div class="pillar-title">Намерение</div>
+      <p class="pillar-text">Направленная сила внимания как инструмент преображения тела</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-dot"></div><div class="divider-line"></div></div>
+
+<!-- FORMAT -->
+<section class="format" data-fade>
+  <div class="format-inner">
+    <div class="section-label">Формат</div>
+    <ul class="format-list">
+      <li>Индивидуальные консультации</li>
+      <li>Групповые сессии в прямом эфире</li>
+      <li>Закрытый Telegram-канал</li>
+      <li>Живые трансляции с практиками</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" data-fade>
+  <h2 class="cta-heading">Готовы войти<br>в пространство<br>возрождения?</h2>
+  <p class="cta-sub">Закрытый канал · Прямой эфир · Сегодня 14:00</p>
+
+  <a href="https://t.me/regenerationcell?livestream=532a54a2e4f0aef74f" class="btn-join" target="_blank" rel="noopener">
+    <span>Подключиться</span>
+  </a>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" data-fade>
+  <div class="section-label">Связь</div>
+  <a href="tel:+79312024923" class="contact-phone">+7 931 202-49-23</a>
+  <p class="contact-hint">Консультации · @serega40in</p>
+</section>
+
+<footer>
+  <p>© Клетка Возрождения · Внутренние практики омоложения</p>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('[data-fade]');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+</script>
+</body>
+      </html>
