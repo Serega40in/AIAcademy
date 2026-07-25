@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лиды — Ладога</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --panel:#ffffff;
+    --line:#e5e2db;
+    --ink:#1c1b19;
+    --sub:#8a8578;
+    --accent:#3f6b52;
+    --accent-bg:#e9efe9;
+    --red:#a4463a;
+    --red-bg:#f5e9e6;
+    --amber:#8a6a2f;
+    --amber-bg:#f4eddc;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 20px 64px;}
+  header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px 20px;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px;
+  }
+  h1{
+    font-size:22px;
+    font-weight:600;
+    margin:0;
+    letter-spacing:0.2px;
+  }
+  .count{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12px;
+    color:var(--sub);
+    letter-spacing:0.4px;
+  }
+  .controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  input[type=text], select{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:13px;
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--panel);
+    color:var(--ink);
+    outline:none;
+  }
+  input[type=text]{flex:1;min-width:180px;}
+  input[type=text]:focus, select:focus{border-color:var(--accent);}
+  select{cursor:pointer;}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  thead th{
+    text-align:left;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:var(--sub);
+    font-weight:600;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody tr{border-bottom:1px solid var(--line);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#faf9f6;}
+  td{
+    padding:10px 14px;
+    font-size:13.5px;
+    vertical-align:top;
+  }
+  td.name{font-weight:600;white-space:nowrap;}
+  td.phone{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:12.5px;
+    color:var(--sub);
+    white-space:nowrap;
+  }
+  td.note{color:#4a473f;}
+  td.src{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11.5px;
+    color:var(--sub);
+    white-space:nowrap;
+  }
+  .tag{
+    display:inline-block;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .tag-refuse{background:var(--red-bg);color:var(--red);}
+  .tag-progress{background:var(--amber-bg);color:var(--amber);}
+  .tag-paid{background:var(--accent-bg);color:var(--accent);}
+  .tag-none{background:#eee;color:#777;}
+
+  .empty{
+    text-align:center;
+    color:var(--sub);
+    padding:40px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:13px;
+  }
+  @media (max-width:640px){
+    td.src{display:none;}
+    thead th:nth-child(5){display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Лиды — Ладога</h1>
+    <div class="count" id="count"></div>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Поиск по имени, телефону, заметке…">
+    <select id="statusFilter">
+      <option value="">Все статусы</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Статус</th>
+        <th>Заметка</th>
+        <th>Источник</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="empty" id="empty" style="display:none;">Ничего не найдено</div>
+</div>
+
+<script>
+const leads = [
+["Мария","+7 931 359-40-48","Не отвечает","Недозвон несколько раз","VK"],
+["Наталья","+7 960 022-40-29","Отказ","Даты не подошли","VK"],
+["Ольга","+7 963 244-83-06","Не отвечает","Недозвон","VK"],
+["Светлана","+7 915 671-51-30","Не отвечает","Пропущен звонок","Битрикс"],
+["Юлия","+7 921 788-00-11","В работе","С дочкой, думает","VK"],
+["Юлия","+7 911 150-73-83","В работе","С мамой и ребёнком","VK"],
+["Елена Пашкова","—","В работе","Переписка, узнать телефон","—"],
+["Сергей Невский","—","Обработано","Переписка","—"],
+["Елена","892141566017","Отказ","Неверный номер, есть почта","—"],
+["Юлия Привалова","+7 915 442-66-66","Оплатил","Оплатила 14 832 ₽ (61000-20%)","Сайт"],
+["Оксана Григорьевна","—","Обработано","Потенциальный партнёр, гость на фестивале","Битрикс"],
+["Логистическая компания","8 (495) 725-70-70","В работе","Передать руководству","—"],
+["Варвара Дейнега","+7 905 296-40-50","Недозвон","—","—"],
+["Андрей","—","Потенциал","Малая надежда, сделка #738","Битрикс"],
+["Елена (с внуком)","+7 953 377-27-64","Не отвечает","Разговаривает по другой линии","—"],
+["Денис","+7 911 240-09-92","Отказ","—","—"],
+["Лена Мишина","—","Не отвечает","Переписка в Битрикс","—"],
+["Анна","+7 981 129-89-35","В работе","Хочет на 4-й поток, узнает 3-го числа","—"],
+["Анастасия Ким","+7 911 019-22-37","Отказ","Уже была на 1-й смене, на другие не поедет","—"],
+["Оксана","+7 911 151-19-46","Отказ","Сбросила","—"],
+["Юлия","+7 999 337-68-15","Не отвечает","—","—"],
+["Мария","+7 931 342-91-90","Недозвон","—","—"],
+["Галина Юркова","—","В работе","Переписка в Битрикс, муж на связи","—"],
+["Дмитрий Иванович","+7 911 292-59-27","Не отвечает","—","—"],
+["Мария Березикова","—","Не отвечает","Переписка в Битрикс","—"],
+["Лидия","+7 905 210-05-21","Недозвон","—","—"],
+["Александр","+7 921 418-98-18","Недозвон","Номер занят","—"],
+["Валентина Логинова","—","Не отвечает","Переписка","—"],
+["Диана Скворцова","—","Отказ","Предлагала рекламу","—"],
+["Кристина Владимировна","—","Не отвечает","Переписка в Битрикс","—"],
+["Ангелина Афанасьева","—","Не отвечает","Переписка","—"],
+["Ольга","+7 921 942-50-56","Не отвечает","—","—"],
+["Владислав","+7 921 555-97-76","Не отвечает","Номер занят","—"],
+["—","8 (919) 717-37-78","Отказ","Ошибка, заявку не оставлял","—"],
+["Евгений","+7 981 264-65-35","Не отвечает","Написал в Битрикс","—"],
+["Лада Девяткина","+7 953 563-69-69","Недозвон","—","—"],
+["Валерия Дерикошма","—","В работе","Написал в Битрикс","—"],
+["Наталья","+7 911 734-13-64","Отказ","Пока не собираются","—"],
+["Марина","+7 915 425-05-35","Волонтёр","—","—"],
+["Андрей","+7 921 941-31-38","Отказ","Не актуально","—"],
+["—","+7 926 538-65-75","Отказ","Уже звонили, третий звонок","—"],
+["Елена Ладога","+7 953 377-27-64","Недозвон","—","—"],
+["Екатерина","8898","Отказ","Не прошла по датам","—"],
+["Дарья Мурынка","—","В работе","Переписка в Битрикс","—"],
+["Надежда","+7 921 797-78-83","Отказ","Смотрела только выходные","—"],
+["Юлия","+7 963 786-76-76","Недозвон","—","—"],
+["Виктория","+7 981 178-79-08","Отказ","Номер не обслуживается, написал в Битрикс","—"],
+["Татьяна Александровна","+7 921 893-70-50","В работе","Организатор, номер в базе непонятен","—"],
+["Наталья","+7 911 846-83-21","Отказ","Уехала на другой фестиваль","—"],
+["Олеся","+7 911 222-24-83","Отказ","Не получается по работе","—"],
+["Семейные решения","+7 921 905-44-25","Не отвечает","—","—"],
+["Александра","+7 911 810-60-70","Отказ","Травмировала ногу","—"],
+["Анна Борисова","+7 999 202-20-80","Отказ","Уезжает","—"],
+["Дарья","+7 981 125-77-31","В работе","Спросила про смены, думает — большой потенциал","—"],
+["Диана","+7 981 739-16-22","Не отвечает","Автоответчик","—"],
+["Наталья","+7 909 673-67-95","Отказ","Не актуально","—"],
+["Алёна Малышева","+7 999 530-82-27","В работе","Звонить через час","—"],
+["Буба","+7 908 124-19-61","Отказ","Пьяный голос","—"],
+["Дмитрий","+7 952 284-99-12","Недозвон","—","—"],
+["Анастасия","+7 911 941-74-86","Оплатил","Уже на фестивале","—"],
+["Ольга (особое питание)","+7 921 305-63-47","В работе","Звонить через 40 мин — большой потенциал","—"],
+["Александра","+7 925 128-73-43","В работе","Волонтёр, вопрос организаторам","—"],
+["Анастасия","+7 952 200-77-55","Недозвон","—","—"],
+["Юлия","+7 999 241-63-79","Отказ","Не сможет по датам","—"],
+["Светлана","+7 912 399-65-27","В работе","Едет 27-го на 3 дня, оплатит 26-го","—"],
+["Анна Стахова","+7 921 631-38-04","Отказ","Номер недоступен","—"],
+["Юлия","+7 911 142-93-38","Отказ","Не смогут поехать","—"],
+["Олеся","+7 911 142-93-38","Отказ","Не актуально","—"],
+["Инна","+7 921 593-82-06","Недозвон","vk.com/id1205902, написал в VK","VK"],
+["Наталья Берестенникова","+7 911 992-55-76","Отказ","—","—"],
+["Светланка","+7 927 478-47-48","Отказ","Сброс","—"],
+["Ирина Жолобова","+7 993 970-03-10","Отказ","Автоответчик, позже — уехала","—"],
+["Алла","+7 904 631-04-37","В работе","Звонить утром — большой потенциал","—"],
+["Ирина Кузнецова","—","Уточнить","Большой потенциал, даты августа","Лендинг"]
+];
+
+const statusClass = s => {
+  if(s==="Отказ") return "tag-refuse";
+  if(s==="Оплатил") return "tag-paid";
+  if(["В работе","Потенциал","Волонтёр","Уточнить"].includes(s)) return "tag-progress";
+  return "tag-none";
+};
+
+const rowsEl = document.getElementById('rows');
+const searchEl = document.getElementById('search');
+const statusEl = document.getElementById('statusFilter');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+
+[...new Set(leads.map(l=>l[2]))].sort().forEach(s=>{
+  const o=document.createElement('option');
+  o.value=s; o.textContent=s;
+  statusEl.appendChild(o);
+});
+
+function render(){
+  const q = searchEl.value.trim().toLowerCase();
+  const st = statusEl.value;
+  const filtered = leads.filter(l=>{
+    const matchesQ = !q || l.join(' ').toLowerCase().includes(q);
+    const matchesS = !st || l[2]===st;
+    return matchesQ && matchesS;
+  });
+  rowsEl.innerHTML = filtered.map(l=>`
+    <tr>
+      <td class="name">${l[0]}</td>
+      <td class="phone">${l[1]}</td>
+      <td><span class="tag ${statusClass(l[2])}">${l[2]}</span></td>
+      <td class="note">${l[3]}</td>
+      <td class="src">${l[4]}</td>
+    </tr>`).join('');
+  emptyEl.style.display = filtered.length ? 'none' : 'block';
+  countEl.textContent = `${filtered.length} из ${leads.length}`;
+}
+
+searchEl.addEventListener('input', render);
+statusEl.addEventListener('change', render);
+render();
+</script>
+</body>
+</html>
