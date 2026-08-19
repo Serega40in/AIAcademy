@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050806">
+<title>S40in — Creative Intelligence Studio</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+:root{
+  --bg:#050806; --paper:#eef0e9; --muted:#929990; --line:rgba(238,240,233,.14);
+  --green:#8cff45; --deep:#063d31; --gold:#d8b56a; --cyan:#70e7d0;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--paper);font-family:Manrope,system-ui,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:20}
+a{color:inherit;text-decoration:none}.wrap{max-width:1440px;margin:auto;padding:0 5vw}
+nav{height:88px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:relative;z-index:5}
+.logo{font-size:19px;font-weight:800;letter-spacing:-.06em}.logo span{color:var(--green)}
+.navlinks{display:flex;gap:28px;color:#aab0aa;font-size:12px}.navlinks a:hover{color:#fff}
+.mono{font-family:"DM Mono",monospace;text-transform:uppercase;letter-spacing:.13em;font-size:10px}
+.hero{min-height:calc(100vh - 88px);display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:4vw;position:relative}
+.kicker{color:var(--green);margin-bottom:28px}.hero h1{font-size:clamp(64px,10vw,158px);line-height:.82;letter-spacing:-.085em;margin:0;font-weight:700}
+.hero h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(238,240,233,.65)}
+.lead{font-size:clamp(17px,1.65vw,24px);line-height:1.45;color:#b9beb8;max-width:650px;margin:36px 0}
+.cta{display:inline-flex;align-items:center;gap:18px;padding:17px 22px;border:1px solid rgba(140,255,69,.55);border-radius:100px;color:#fff;transition:.3s}
+.cta:hover{background:var(--green);color:#061006;transform:translateY(-2px)}
+.hero-art{height:min(72vh,760px);position:relative;display:grid;place-items:center}
+.orb{width:min(42vw,600px);aspect-ratio:1;border-radius:50%;position:relative;background:
+radial-gradient(circle at 38% 30%,#effff8 0 2%,#78f7c8 5%,#126e56 20%,#031b15 48%,transparent 49%),
+conic-gradient(from 130deg,transparent,#8cff45,#0b4939,#d8b56a,#09291f,transparent);
+filter:drop-shadow(0 0 55px rgba(66,255,166,.18));animation:float 8s ease-in-out infinite}
+.orb:before,.orb:after{content:"";position:absolute;inset:-11%;border:1px solid rgba(140,255,69,.26);border-radius:47% 53% 51% 49%;transform:rotate(28deg) scaleY(.42);animation:spin 16s linear infinite}
+.orb:after{inset:-4%;border-color:rgba(216,181,106,.38);transform:rotate(-42deg) scaleY(.28);animation-duration:23s}
+.orb i{position:absolute;inset:17%;border:1px solid rgba(255,255,255,.18);border-radius:50%;box-shadow:inset 0 0 80px rgba(140,255,69,.12)}
+@keyframes float{50%{transform:translateY(-18px) rotate(3deg)}}@keyframes spin{to{transform:rotate(388deg) scaleY(.42)}}
+section{padding:130px 0;border-top:1px solid var(--line)}
+.eyebrow{color:var(--green);margin-bottom:18px}.section-title{font-size:clamp(40px,6vw,86px);line-height:.95;letter-spacing:-.07em;margin:0 0 55px;max-width:1000px}
+.manifesto{display:grid;grid-template-columns:1fr 1fr;gap:8vw}.manifesto p{font-size:clamp(22px,3vw,43px);line-height:1.12;letter-spacing:-.045em;margin:0}.manifesto .small{font-size:17px;line-height:1.7;color:#9da49d;letter-spacing:0}
+.art-strip{height:520px;margin:0 calc(-5vw);overflow:hidden;position:relative;background:#07120f}
+.art-strip:before{content:"";position:absolute;inset:0;background:
+radial-gradient(circle at 16% 52%,rgba(140,255,69,.9) 0 1%,transparent 15%),
+radial-gradient(circle at 72% 25%,rgba(216,181,106,.7),transparent 22%),
+radial-gradient(circle at 54% 80%,rgba(41,180,151,.55),transparent 25%),
+linear-gradient(115deg,#020604,#09271e 45%,#050908)}
+.art-strip:after{content:"S40IN";position:absolute;left:4%;bottom:-45px;font-size:25vw;font-weight:800;letter-spacing:-.12em;color:transparent;-webkit-text-stroke:1px rgba(238,240,233,.12)}
+.rings{position:absolute;left:56%;top:50%;width:430px;height:430px;transform:translate(-50%,-50%)}
+.rings:before,.rings:after{content:"";position:absolute;inset:0;border:1px solid rgba(140,255,69,.45);border-radius:50%;box-shadow:0 0 90px rgba(140,255,69,.13)}
+.rings:after{inset:16%;border-color:rgba(216,181,106,.55);transform:rotate(45deg) scaleX(.7)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.card{background:var(--bg);padding:38px;min-height:300px}.num{color:var(--green);margin-bottom:80px}.card h3{font-size:27px;margin:0 0 14px;letter-spacing:-.04em}.card p{color:#959c95;line-height:1.6;margin:0}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.package{border:1px solid var(--line);padding:34px;display:flex;flex-direction:column;min-height:570px;background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.005))}
+.package.featured{border-color:rgba(140,255,69,.55);background:linear-gradient(145deg,rgba(140,255,69,.09),rgba(255,255,255,.015))}
+.package .tag{color:var(--green);margin-bottom:50px}.package h3{font-size:38px;letter-spacing:-.06em;margin:0 0 8px}.price{font-size:50px;font-weight:700;letter-spacing:-.06em;margin:0 0 35px}.price small{font-size:13px;color:#858c85;font-weight:400;letter-spacing:0}
+.package ul{padding:0;margin:0;list-style:none;border-top:1px solid var(--line)}.package li{padding:14px 0;border-bottom:1px solid var(--line);color:#b4bbb4;font-size:14px}.package li:before{content:"↗";color:var(--green);margin-right:9px}
+.package .cta{margin-top:auto;justify-content:center}
+.process{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.step{padding:24px 16px;min-height:210px;border-right:1px solid var(--line)}.step:last-child{border:0}.step b{display:block;font-size:11px;color:var(--green);margin-bottom:55px}.step h4{font-size:16px;margin:0;line-height:1.25}.step p{font-size:11px;color:#777f77;line-height:1.45}
+.ai{display:grid;grid-template-columns:.8fr 1.2fr;gap:8vw;align-items:center}.ai-visual{min-height:430px;position:relative;background:radial-gradient(circle at center,rgba(140,255,69,.18),transparent 48%);display:grid;place-items:center}.ai-visual .q{font-size:230px;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(140,255,69,.65);font-weight:800;animation:pulse 4s ease-in-out infinite}.ai-visual:before,.ai-visual:after{content:"";position:absolute;width:75%;height:75%;border:1px solid rgba(140,255,69,.2);border-radius:50%;transform:rotate(35deg) scaleY(.3)}.ai-visual:after{transform:rotate(-35deg) scaleY(.3);border-color:rgba(216,181,106,.35)}@keyframes pulse{50%{transform:scale(1.04);text-shadow:0 0 50px rgba(140,255,69,.3)}}
+.ai h2{font-size:clamp(42px,6vw,84px);line-height:.95;letter-spacing:-.07em;margin:0 0 30px}.ai p{font-size:19px;line-height:1.65;color:#aeb5ae}
+.final{padding:180px 0 100px;text-align:center}.final h2{font-size:clamp(60px,11vw,160px);line-height:.78;letter-spacing:-.09em;margin:0 0 45px}.final h2 span{color:transparent;-webkit-text-stroke:1px rgba(238,240,233,.55)}
+footer{border-top:1px solid var(--line);padding:30px 0;display:flex;justify-content:space-between;color:#737a73}
+@media(max-width:900px){.navlinks{display:none}.hero,.manifesto,.ai{grid-template-columns:1fr}.hero{padding:70px 0}.hero-art{height:480px}.orb{width:75vw}.grid,.packages{grid-template-columns:1fr}.process{grid-template-columns:1fr 1fr}.step{border-bottom:1px solid var(--line)}.art-strip{height:360px}.rings{left:50%;width:280px;height:280px}.card{min-height:220px}.package{min-height:500px}.final{padding-top:120px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="logo">S40<span>in</span></div>
+  <div class="navlinks"><a href="#concept">Концепт</a><a href="#packages">Пакеты</a><a href="#process">Процесс</a><a href="#contact">Контакт</a></div>
+  <div class="mono">Creative Intelligence Studio</div>
+</nav>
+
+<header class="hero">
+  <div>
+    <div class="kicker mono">S40in / brand transformation</div>
+    <h1>СОЗДАЁМ<br><em>НЕОБЫЧНО.</em></h1>
+    <p class="lead">Концептуальный дизайн, стратегия и медиа для компаний, которые хотят выглядеть не просто красиво — а <strong>неизбежно заметно</strong>.</p>
+    <a class="cta" href="#contact">Обсудить новый цикл <span>↗</span></a>
+  </div>
+  <div class="hero-art"><div class="orb"><i></i></div></div>
+</header>
+
+<section id="concept">
+  <div class="eyebrow mono">01 / Concept</div>
+  <h2 class="section-title">Не набор услуг.<br>Целостная система бренда.</h2>
+  <div class="manifesto">
+    <p>Из одного сильного ядра мы разворачиваем <em>весь мир бренда</em>: смысл, визуальный язык, звук, движение, цифровую среду и присутствие во внешнем мире.</p>
+    <p class="small">S40in работает на стыке арт-дирекшна, маркетинговой стратегии и искусственного интеллекта. ИИ — не замена творцу, а партнёр по исследованию, генерации и ускорению производства. Решение остаётся человеческим: концепт, вкус, отбор и направление.</p>
+  </div>
+</section>
+
+<div class="art-strip">
+  <div class="rings"></div>
+</div>
+
+<section>
+  <div class="eyebrow mono">02 / What we build</div>
+  <h2 class="section-title">Один концепт.<br>Много форм.</h2>
+  <div class="grid">
+    <article class="card"><div class="num mono">01 — CORE</div><h3>Позиционирование</h3><p>Исследование, смысловое ядро, идея бренда, характер, аудитория, стратегия и направление движения.</p></article>
+    <article class="card"><div class="num mono">02 — IDENTITY</div><h3>Визуальный мир</h3><p>Айдентика, арт-дирекшн, дизайн-система, арты, брендбук, упаковка смыслов, digital-образы.</p></article>
+    <article class="card"><div class="num mono">03 — MEDIA</div><h3>Звук и движение</h3><p>Видео-презентации, рекламные ролики, motion, аудио, авторские песни и звуковой образ бренда.</p></article>
+    <article class="card"><div class="num mono">04 — DIGITAL</div><h3>Сайт и среда</h3><p>Концептуальные сайты, лендинги, digital-продукты и визуальная среда, в которой бренд живёт.</p></article>
+    <article class="card"><div class="num mono">05 — LAUNCH</div><h3>Выход наружу</h3><p>Контент для социальных площадок, презентация, публикация и материалы для коммуникации с рынком.</p></article>
+    <article class="card"><div class="num mono">06 — OBJECTS</div><h3>Мерч и изделия</h3><p>Физическое продолжение бренда: одежда, предметы, упаковка, брендированные изделия и специальные объекты.</p></article>
+  </div>
+</section>
+
+<section id="packages">
+  <div class="eyebrow mono">03 / Partnership</div>
+  <h2 class="section-title">Три уровня<br>погружения.</h2>
+  <div class="packages">
+    <article class="package">
+      <div class="tag mono">01 / BASE</div><h3>Ядро</h3><div class="price">100 000 ₽ <small>/ месяц</small></div>
+      <ul><li>Концепт и позиционирование</li><li>Маркетинговая стратегия</li><li>Ключевые визуальные материалы</li><li>AI-assisted creative production</li><li>Контент для социальных площадок</li><li>Ежемесячный цикл развития</li></ul>
+      <a class="cta" href="#contact">Начать</a>
+    </article>
+    <article class="package featured">
+      <div class="tag mono">02 / COMPLEX</div><h3>Система</h3><div class="price">500 000 ₽ <small>/ месяц</small></div>
+      <ul><li>Всё из пакета «Ядро»</li><li>Полная визуальная система бренда</li><li>Сайты и digital-среда</li><li>Видео-презентации и motion</li><li>Аудио / песни для бренда</li><li>Контент и запуск во внешнем мире</li><li>Разработка мерча и изделий</li></ul>
+      <a class="cta" href="#contact">Выбрать систему</a>
+    </article>
+    <article class="package">
+      <div class="tag mono">03 / VIP</div><h3>Погружение</h3><div class="price">1 500 000 ₽ <small>/ месяц</small></div>
+      <ul><li>Индивидуальная работа под ключ</li><li>Личное погружение в бизнес</li><li>Авторский арт-дирекшн</li><li>Полный creative + marketing stack</li><li>Все ключевые материалы бренда</li><li>Приоритетная коммуникация</li><li>Новый цикл по результатам</li></ul>
+      <a class="cta" href="#contact">Обсудить VIP</a>
+    </article>
+  </div>
+  <p class="mono" style="color:#626a62;margin-top:22px">Все форматы — работа по договору ИП. Финальный состав работ фиксируется под задачу компании.</p>
+</section>
+
+<section id="process">
+  <div class="eyebrow mono">04 / Process</div>
+  <h2 class="section-title">Семь шагов.<br>Один живой цикл.</h2>
+  <div class="process">
+    <div class="step"><b>01</b><h4>Знакомство</h4><p>Понимаем бизнес и людей.</p></div>
+    <div class="step"><b>02</b><h4>Концепт</h4><p>Находим центральную идею.</p></div>
+    <div class="step"><b>03</b><h4>Стратегия</h4><p>Превращаем идею в направление.</p></div>
+    <div class="step"><b>04</b><h4>Материалы</h4><p>Разворачиваем визуал, звук, видео, сайт.</p></div>
+    <div class="step"><b>05</b><h4>Презентация</h4><p>Выходим во внешний мир.</p></div>
+    <div class="step"><b>06</b><h4>Мерч</h4><p>Создаём физические объекты бренда.</p></div>
+    <div class="step"><b>07</b><h4>Новый цикл</h4><p>Смотрим результат и усиливаем.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="ai">
+    <div class="ai-visual"><div class="q">Q</div></div>
+    <div>
+      <div class="eyebrow mono">05 / Human × AI</div>
+      <h2>Партнёрство<br>с интеллектом.</h2>
+      <p>Мы используем ИИ как творческого партнёра: для поиска неожиданных направлений, генерации образов, музыки, видео, текстов и быстрых прототипов. Человек задаёт смысл, вкус, рамку и финальное решение.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="contact">
+  <div class="eyebrow mono">06 / Begin</div>
+  <h2>БРЕНД<br><span>МОЖЕТ БЫТЬ</span><br>БОЛЬШЕ.</h2>
+  <a class="cta" href="mailto:hello@s40in.ru">Запустить разговор ↗</a>
+  <p class="mono" style="color:#666d66;margin-top:35px">Работа по договору ИП · S40in · Creative Intelligence Studio</p>
+</section>
+
+<footer><div>S40in © 2026</div><div class="mono">Concept / Strategy / Design / AI</div></footer>
+</div>
+</body>
+</html>
