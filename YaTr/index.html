@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Транскрибация встреч с Яндекс.Диска</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --border: #2a2e38;
+    --text: #e8e9ec;
+    --muted: #9aa1ac;
+    --accent: #6c8cff;
+    --ok: #4caf7d;
+    --err: #e5626b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  h1 { font-size: 20px; margin: 0 0 6px; }
+  p.sub { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; margin-top: 16px; }
+  input[type=text] {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #101217;
+    color: var(--text);
+    font-size: 14px;
+  }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    margin-top: 8px;
+  }
+  .progress-wrap { margin-top: 24px; display: none; }
+  .bar-bg {
+    height: 8px;
+    background: #101217;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .stats b { color: var(--text); }
+  .file-list {
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-height: 340px;
+    overflow-y: auto;
+  }
+  .file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+  .file-row:last-child { border-bottom: none; }
+  .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .file-meta { color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+  .file-status { font-size: 13px; white-space: nowrap; }
+  .file-status.ok { color: var(--ok); }
+  .file-status.error { color: var(--err); }
+  .file-status.pending { color: var(--muted); }
+  .file-row a {
+    color: var(--accent);
+    font-size: 12px;
+    text-decoration: none;
+    margin-left: 8px;
+  }
+  .download-link { display: none; margin-top: 18px; text-align: center; }
+  .download-link a {
+    display: inline-block;
+    background: var(--ok);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .err { color: var(--err); font-size: 13px; margin-top: 10px; display: none; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 20px; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Транскрибация встреч с Яндекс.Диска</h1>
+    <p class="sub">Вставь ссылку на публичную папку — сервер сам найдёт все файлы, распознает речь и покажет результат по каждому файлу. Можно закрыть страницу и вернуться позже — прогресс сохранится.</p>
+
+    <label for="yandex">Ссылка на папку Яндекс.Диска</label>
+    <input type="text" id="yandex" placeholder="https://disk.360.yandex.ru/d/..." />
+
+    <button id="startBtn">Начать транскрибацию</button>
+    <button id="resumeBtn" class="secondary" style="display:none;">Проверить сохранённую задачу</button>
+
+    <div class="err" id="err"></div>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
+      <div class="stats">
+        <span>Готово: <b id="statDone">0</b> / <b id="statTotal">?</b></span>
+        <span>Прошло: <b id="statElapsed">0:00</b></span>
+        <span>Ср. время на файл: <b id="statAvg">—</b></span>
+        <span>Осталось примерно: <b id="statEta">—</b></span>
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+
+      <div class="download-link" id="downloadWrap">
+        <a id="downloadLink" href="#">Скачать все транскрипты (.zip)</a>
+      </div>
+    </div>
+
+    <div class="hint">
+      Задача выполняется на сервере, не в этой вкладке — можно закрыть браузер и открыть страницу позже, ID задачи хранится локально в этом браузере. Бесплатный сервер работает на CPU, поэтому на длинных записях распознавание может занимать долгое время.
+    </div>
+  </div>
+
+<script>
+// ⚠️ Перед публикацией укажи здесь адрес своего Hugging Face Space:
+const BACKEND_URL = "https://REPLACE-ME.hf.space";
+
+const $ = (id) => document.getElementById(id);
+let pollTimer = null;
+let tickTimer = null;
+let jobStartedAt = null;
+
+function saveJob(jobId) {
+  localStorage.setItem("yt_job_id", jobId);
+}
+function loadJob() {
+  return localStorage.getItem("yt_job_id");
+}
+
+function showError(msg) {
+  $("err").style.display = "block";
+  $("err").textContent = msg;
+}
+function clearError() {
+  $("err").style.display = "none";
+}
+
+function fmtDuration(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  return `${m}:${String(s).padStart(2,"0")}`;
+}
+
+function tickElapsed() {
+  if (!jobStartedAt) return;
+  const elapsed = (Date.now() / 1000) - jobStartedAt;
+  $("statElapsed").textContent = fmtDuration(elapsed);
+}
+
+async function startJob() {
+  clearError();
+  const yandex = $("yandex").value.trim();
+  if (!yandex) { showError("Укажи ссылку на папку Яндекс.Диска."); return; }
+  if (BACKEND_URL.includes("REPLACE-ME")) {
+    showError("В коде страницы не указан адрес backend-сервера (переменная BACKEND_URL).");
+    return;
+  }
+
+  $("startBtn").disabled = true;
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/start`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ yandex_url: yandex }),
+    });
+    if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
+    const data = await res.json();
+    saveJob(data.job_id);
+    jobStartedAt = data.started_at;
+    $("progressWrap").style.display = "block";
+    $("fileList").innerHTML = "";
+    clearInterval(tickTimer);
+    tickTimer = setInterval(tickElapsed, 1000);
+    poll(data.job_id);
+  } catch (e) {
+    showError("Не удалось запустить задачу: " + e.message);
+    $("startBtn").disabled = false;
+  }
+}
+
+function renderFiles(files) {
+  const list = $("fileList");
+  list.innerHTML = "";
+  files.forEach((f) => {
+    const row = document.createElement("div");
+    row.className = "file-row";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "file-name";
+    nameEl.textContent = f.name;
+    nameEl.title = f.name;
+
+    const right = document.createElement("div");
+    right.style.display = "flex";
+    right.style.alignItems = "center";
+
+    const meta = document.createElement("span");
+    meta.className = "file-meta";
+    meta.textContent = f.status !== "pending" ? `${f.seconds}с` : "";
+
+    const status = document.createElement("span");
+    status.className = "file-status " + f.status;
+    status.textContent = f.status === "ok" ? "✓ готово" : f.status === "error" ? "✗ ошибка" : "…";
+
+    right.appendChild(meta);
+    right.appendChild(status);
+
+    if (f.status === "ok" && f.txt_name) {
+      const link = document.createElement("a");
+      link.href = `${BACKEND_URL}/api/file/${window.__jobId}/${encodeURIComponent(f.txt_name)}`;
+      link.target = "_blank";
+      link.textContent = "открыть";
+      right.appendChild(link);
+    }
+
+    row.appendChild(nameEl);
+    row.appendChild(right);
+    list.appendChild(row);
+  });
+}
+
+async function poll(jobId) {
+  window.__jobId = jobId;
+  clearTimeout(pollTimer);
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/status/${jobId}`);
+    if (!res.ok) throw new Error(`Сервер ответил ${res.status}`);
+    const data = await res.json();
+
+    if (data.status === "not_found") {
+      showError("Задача не найдена на сервере (возможно, backend перезапускался).");
+      clearInterval(tickTimer);
+      $("startBtn").disabled = false;
+      return;
+    }
+    if (data.status === "error") {
+      showError(data.error || "Ошибка на сервере.");
+      clearInterval(tickTimer);
+      $("startBtn").disabled = false;
+      return;
+    }
+
+    jobStartedAt = data.started_at;
+    const total = data.total || 0;
+    const done = data.done || 0;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 3;
+
+    $("barFill").style.width = pct + "%";
+    $("statDone").textContent = done;
+    $("statTotal").textContent = total > 0 ? total : "?";
+
+    const okFiles = (data.files || []).filter(f => f.status === "ok");
+    const avgSec = okFiles.length > 0 ? okFiles.reduce((a,f) => a + f.seconds, 0) / okFiles.length : null;
+    $("statAvg").textContent = avgSec ? fmtDuration(avgSec) : "—";
+
+    if (avgSec && total > 0) {
+      const remaining = Math.max(0, total - done);
+      $("statEta").textContent = fmtDuration(remaining * avgSec);
+    } else {
+      $("statEta").textContent = "—";
+    }
+
+    renderFiles(data.files || []);
+
+    if (data.status === "done") {
+      clearInterval(tickTimer);
+      const elapsedFinal = (data.finished_at || Date.now()/1000) - data.started_at;
+      $("statElapsed").textContent = fmtDuration(elapsedFinal);
+      $("downloadWrap").style.display = "block";
+      $("downloadLink").href = `${BACKEND_URL}/api/download/${jobId}`;
+      $("startBtn").disabled = false;
+      return;
+    }
+
+    pollTimer = setTimeout(() => poll(jobId), 4000);
+  } catch (e) {
+    showError("Потеряна связь с сервером, пробую снова...");
+    pollTimer = setTimeout(() => poll(jobId), 8000);
+  }
+}
+
+$("startBtn").addEventListener("click", startJob);
+$("resumeBtn").addEventListener("click", () => {
+  const jobId = loadJob();
+  if (jobId) {
+    $("progressWrap").style.display = "block";
+    clearInterval(tickTimer);
+    tickTimer = setInterval(tickElapsed, 1000);
+    poll(jobId);
+  }
+});
+
+window.addEventListener("load", () => {
+  if (loadJob()) {
+    $("resumeBtn").style.display = "block";
+  }
+});
+</script>
+</body>
+  </html>
