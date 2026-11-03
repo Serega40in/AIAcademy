@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f8f6">
+  <meta name="description" content="S40in Creative Studio — ИИ-видео, музыка, персонажи, визуальные концепции и автоматизации под вашу задачу.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="S40in Creative Studio — творчество в партнёрстве с ИИ">
+  <meta property="og:description" content="Превращаем идеи в видео, музыку, персонажей и работающие цифровые решения.">
+  <title>S40in Creative Studio — творчество в партнёрстве с ИИ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f8f6;
+      --ink: #142a32;
+      --muted: #5f7075;
+      --navy: #102e3b;
+      --navy-2: #193e4b;
+      --emerald: #087c67;
+      --emerald-soft: #dff1e9;
+      --gold: #bd9856;
+      --line: #dce5e0;
+      --white: #fff;
+      --radius: 24px;
+      --shadow: 0 20px 70px rgba(16, 46, 59, .09);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #138b74; outline-offset: 4px; }
+    .wrap { width: min(1160px, calc(100% - 44px)); margin-inline: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(247, 248, 246, .9); backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(16, 46, 59, .08);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center;
+      background: var(--navy); color: #a3e7ce; font-weight: 800; letter-spacing: -.08em;
+      box-shadow: inset 0 1px 0 #ffffff28;
+    }
+    .brand-name { display: block; font-weight: 800; font-size: 14px; letter-spacing: .12em; line-height: 1.15; }
+    .brand-desc { display: block; color: var(--muted); font-size: 10px; letter-spacing: .07em; margin-top: 4px; }
+    .nav-links { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px); }
+    .nav-links a { text-decoration: none; font-size: 13px; color: #42585f; transition: color .2s; }
+    .nav-links a:hover { color: var(--emerald); }
+    .nav-cta, .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      text-decoration: none; border-radius: 999px; min-height: 48px; padding: 12px 20px;
+      font-weight: 750; font-size: 13px; transition: transform .2s, box-shadow .2s, background .2s;
+    }
+    .nav-cta { background: var(--navy); color: #fff; }
+    .nav-cta:hover, .button-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px #102e3b20; }
+    .hero { position: relative; overflow: hidden; padding: clamp(66px, 9vw, 124px) 0 82px; }
+    .hero::before {
+      content: ""; position: absolute; width: 540px; height: 540px; right: -160px; top: -190px;
+      border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle at 35% 38%, #c7e7d7 0, #e0eee7 24%, #f0e7cf 38%, #f7f8f6 70%);
+      opacity: .72;
+    }
+    .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.07fr) minmax(320px, .93fr); gap: clamp(32px, 6vw, 82px); align-items: center; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--emerald); font-size: 11px; font-weight: 850; letter-spacing: .19em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; height: 1px; width: 28px; background: var(--gold); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 690px; margin: 22px 0 22px; font-size: clamp(42px, 5.7vw, 74px); line-height: 1.02; letter-spacing: -.065em; font-weight: 720; }
+    h1 span { color: var(--emerald); }
+    .hero-copy { max-width: 585px; color: #50646a; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.65; margin-bottom: 28px; }
+    .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .button-primary { background: var(--navy); color: white; box-shadow: 0 8px 22px #102e3b16; }
+    .button-secondary { border: 1px solid #cddad4; color: var(--navy); background: #ffffff9c; }
+    .button-secondary:hover { background: white; transform: translateY(-1px); }
+    .assurance { display: flex; flex-wrap: wrap; gap: 9px 18px; margin-top: 27px; color: #6a7b7e; font-size: 12px; }
+    .assurance span::before { content: "✓"; color: var(--emerald); font-weight: 900; margin-right: 7px; }
+    .visual { position: relative; min-height: 420px; display: grid; place-items: center; }
+    .visual-halo {
+      position: absolute; width: min(100%, 430px); aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(circle at 36% 27%, #ffffff 0, #edf6f0 24%, #c6e8d9 42%, #9dcbbb 56%, #d5d9c8 67%, #f7f8f6 72%);
+      box-shadow: inset -24px -22px 60px #285c5114, 0 36px 90px #235d4b15;
+    }
+    .visual-halo::before { content: ""; position: absolute; inset: 12% -8%; border: 1px solid #a4cdbd; border-radius: 50%; transform: rotate(-28deg); }
+    .visual-halo::after { content: ""; position: absolute; inset: -5% 22%; border: 1px solid #d3b978b5; border-radius: 50%; transform: rotate(34deg); }
+    .float-card {
+      position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px;
+      min-width: 168px; padding: 13px 15px; border: 1px solid #ffffffd9; border-radius: 17px;
+      background: #ffffffd9; box-shadow: 0 16px 40px #143c3515; backdrop-filter: blur(14px);
+    }
+    .float-card .glyph { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: var(--emerald); background: var(--emerald-soft); font-size: 20px; }
+    .float-card strong { display: block; color: var(--navy); font-size: 12px; line-height: 1.3; }
+    .float-card small { display: block; color: #748487; font-size: 10px; margin-top: 3px; }
+    .fc-video { top: 12%; left: -2%; }
+    .fc-music { top: 27%; right: -4%; }
+    .fc-character { bottom: 20%; left: -5%; }
+    .fc-flow { bottom: 8%; right: 1%; }
+    .studio-stamp { position: absolute; z-index: 1; display: grid; place-items: center; width: 120px; aspect-ratio: 1; border-radius: 50%; background: var(--navy); color: #d3f1e5; text-align: center; box-shadow: 0 20px 44px #102e3b2e; transform: rotate(-9deg); }
+    .studio-stamp b { font-size: 24px; letter-spacing: -.06em; }
+    .studio-stamp span { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+    .section { padding: clamp(66px, 8vw, 104px) 0; }
+    .section-head { max-width: 690px; margin-bottom: 34px; }
+    .section-head h2 { font-size: clamp(32px, 4vw, 47px); line-height: 1.08; letter-spacing: -.05em; margin: 14px 0 15px; }
+    .section-head p { color: var(--muted); max-width: 570px; margin-bottom: 0; }
+    .service-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .service {
+      min-height: 258px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius);
+      background: #fff; box-shadow: 0 8px 30px #173b3410; transition: transform .2s, box-shadow .2s;
+    }
+    .service:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .service-icon { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 15px; background: #e5f2eb; color: var(--emerald); font-size: 23px; margin-bottom: 23px; }
+    .service:nth-child(2) .service-icon { background: #f6eedc; color: #916d28; }
+    .service:nth-child(3) .service-icon { background: #e8edf9; color: #4e66a2; }
+    .service:nth-child(4) .service-icon { background: #e8eef0; color: #3c6470; }
+    .service h3 { font-size: 17px; line-height: 1.25; margin-bottom: 10px; letter-spacing: -.02em; }
+    .service p { font-size: 13px; line-height: 1.65; color: var(--muted); margin-bottom: 17px; }
+    .service a { color: var(--emerald); font-weight: 800; text-decoration: none; font-size: 12px; }
+    .service a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .strip { background: var(--navy); color: #f7fbf8; position: relative; overflow: hidden; }
+    .strip::after { content: ""; position: absolute; width: 370px; height: 370px; border: 1px solid #d0b36d55; border-radius: 50%; right: -100px; top: -210px; box-shadow: 0 0 0 36px #ffffff04, 0 0 0 72px #ffffff03; }
+    .strip-inner { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 28px; padding: 34px 0; }
+    .strip h2 { font-size: clamp(24px, 3vw, 34px); line-height: 1.13; letter-spacing: -.04em; margin: 0 0 8px; }
+    .strip p { color: #bbcccb; font-size: 14px; margin: 0; }
+    .strip .button { border: 1px solid #62847e; white-space: nowrap; color: #e7f8ef; background: #ffffff08; }
+    .strip .button:hover { background: #ffffff12; }
+    .work-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .work-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: white; text-decoration: none; min-height: 250px; transition: transform .2s, box-shadow .2s; }
+    .work-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .work-art { height: 126px; display: flex; align-items: flex-end; padding: 17px 20px; position: relative; overflow: hidden; color: white; background: linear-gradient(135deg, #0e293a, #1c665b); }
+    .work-art::before { content: ""; position: absolute; width: 200px; height: 200px; border-radius: 50%; right: -30px; top: -100px; border: 1px solid #ffffff58; box-shadow: 0 0 0 20px #ffffff08, 0 0 0 42px #ffffff07; }
+    .work-art span { position: relative; font-size: 11px; letter-spacing: .17em; font-weight: 800; text-transform: uppercase; }
+    .work-card:nth-child(2) .work-art { background: linear-gradient(135deg, #131a33, #35457b); }
+    .work-card:nth-child(3) .work-art { background: linear-gradient(135deg, #1b302e, #617d69); }
+    .work-body { padding: 21px; display: flex; flex-direction: column; flex: 1; }
+    .work-body h3 { margin-bottom: 8px; font-size: 17px; }
+    .work-body p { margin-bottom: 17px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .work-link { margin-top: auto; color: var(--emerald); font-weight: 800; font-size: 12px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: step; }
+    .step { border-top: 1px solid #c8d6cf; padding: 21px 14px 0 0; counter-increment: step; }
+    .step::before { content: "0" counter(step); color: var(--gold); font-weight: 850; font-size: 12px; letter-spacing: .12em; }
+    .step h3 { margin: 11px 0 7px; font-size: 18px; }
+    .step p { color: var(--muted); font-size: 14px; max-width: 310px; margin-bottom: 0; }
+    .ethics { display: grid; grid-template-columns: .8fr 1.2fr; gap: 36px; padding: clamp(28px, 5vw, 55px); background: #e8f1ec; border: 1px solid #d6e4dc; border-radius: 30px; align-items: start; }
+    .ethics h2 { font-size: clamp(27px, 3.4vw, 40px); line-height: 1.1; letter-spacing: -.045em; margin: 0; }
+    .ethics p { color: #50666a; margin: 0; }
+    .ethics p + p { margin-top: 14px; }
+    .contact { padding: clamp(70px, 9vw, 116px) 0; }
+    .contact-panel { overflow: hidden; position: relative; border-radius: 32px; padding: clamp(30px, 6vw, 65px); background: var(--navy); color: white; box-shadow: var(--shadow); }
+    .contact-panel::after { content: ""; position: absolute; width: 320px; height: 320px; right: -90px; bottom: -200px; border: 1px solid #dfc37c80; border-radius: 50%; box-shadow: 0 0 0 32px #ffffff05, 0 0 0 68px #ffffff04; }
+    .contact-content { position: relative; z-index: 1; max-width: 700px; }
+    .contact .eyebrow { color: #a6e7cf; }
+    .contact h2 { font-size: clamp(34px, 5vw, 58px); line-height: 1.04; letter-spacing: -.055em; margin: 16px 0; }
+    .contact p { max-width: 620px; color: #c6d7d5; font-size: 17px; }
+    .contact .button-primary { background: #b8e6d3; color: #102e3b; box-shadow: none; }
+    .contact .button-secondary { background: transparent; color: white; border-color: #597871; }
+    footer { padding: 24px 0 36px; display: flex; justify-content: space-between; gap: 20px; color: #718286; font-size: 12px; border-top: 1px solid var(--line); }
+    footer a { color: var(--emerald); text-decoration: none; }
+    @media (max-width: 930px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-grid > div:first-child { max-width: 770px; }
+      .visual { min-height: 360px; max-width: 570px; width: 100%; margin: -10px auto 0; }
+      .visual-halo { width: 340px; }
+      .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fc-video { left: 6%; } .fc-music { right: 4%; } .fc-character { left: 4%; } .fc-flow { right: 5%; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 30px, 520px); }
+      .nav { min-height: 66px; }
+      .brand-desc { display: none; }
+      .nav-links { gap: 0; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .nav-cta { min-height: 41px; padding: 10px 14px; font-size: 12px; }
+      .hero { padding: 62px 0 52px; }
+      h1 { font-size: clamp(41px, 12vw, 57px); }
+      .hero-copy { font-size: 16px; }
+      .visual { min-height: 315px; margin-top: 16px; }
+      .visual-halo { width: 275px; }
+      .float-card { min-width: 145px; padding: 10px 11px; gap: 9px; border-radius: 14px; }
+      .float-card .glyph { width: 32px; height: 32px; font-size: 17px; }
+      .float-card strong { font-size: 11px; }
+      .float-card small { font-size: 9px; }
+      .fc-video { left: 0; top: 7%; } .fc-music { right: 0; top: 25%; }
+      .fc-character { left: 0; bottom: 20%; } .fc-flow { right: 0; bottom: 5%; }
+      .studio-stamp { width: 91px; } .studio-stamp b { font-size: 19px; } .studio-stamp span { font-size: 8px; }
+      .service-grid, .work-grid, .steps, .ethics { grid-template-columns: 1fr; }
+      .service { min-height: 0; padding: 22px; }
+      .service-icon { margin-bottom: 16px; }
+      .strip-inner { align-items: flex-start; flex-direction: column; padding: 29px 0; }
+      .strip .button { white-space: normal; }
+      .ethics { padding: 27px 23px; gap: 18px; border-radius: 24px; }
+      footer { flex-direction: column; gap: 6px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="S40in Creative Studio — начало">
+        <span class="brand-mark" aria-hidden="true">S40</span>
+        <span><span class="brand-name">S40in</span><span class="brand-desc">CREATIVE STUDIO</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Основная навигация">
+        <a href="#services">Услуги</a>
+        <a href="#work">Проекты</a>
+        <a href="#process">Как работаем</a>
+        <a class="nav-cta" data-message="Здравствуйте! Хочу обсудить творческий проект." href="https://t.me/serega40in">Обсудить проект <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">S40in · творчество в партнёрстве с ИИ</div>
+          <h1>Делаем идеи <span>видимыми,</span> слышимыми и работающими.</h1>
+          <p class="hero-copy">ИИ-видео, музыка, персонажи и цифровые решения — под вашу задачу. Начинаем с идеи, быстро собираем понятный план и вместе доводим результат до нужного вида.</p>
+          <div class="actions">
+            <a class="button button-primary" data-message="Здравствуйте! Хочу обсудить творческий проект." href="https://t.me/serega40in">Расскажите о своей идее <span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#services">Посмотреть услуги <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="assurance">
+            <span>Понятный объём работ</span>
+            <span>Согласование до старта</span>
+            <span>Без лишней сложности</span>
+          </div>
+        </div>
+        <div class="visual" aria-label="Направления S40in: видео, музыка, персонажи и автоматизация">
+          <div class="visual-halo" aria-hidden="true"></div>
+          <div class="studio-stamp" aria-hidden="true"><div><b>S40in</b><br><span>make it real</span></div></div>
+          <div class="float-card fc-video"><span class="glyph" aria-hidden="true">▶</span><span><strong>ИИ-видео</strong><small>Истории в движении</small></span></div>
+          <div class="float-card fc-music"><span class="glyph" aria-hidden="true">♫</span><span><strong>Музыка</strong><small>Свой звук и настроение</small></span></div>
+          <div class="float-card fc-character"><span class="glyph" aria-hidden="true">✳</span><span><strong>Персонажи</strong><small>Образы с характером</small></span></div>
+          <div class="float-card fc-flow"><span class="glyph" aria-hidden="true">⌘</span><span><strong>Автоматизация</strong><small>Меньше рутины</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Чем можем помочь</div>
+          <h2>От одной яркой идеи — до готового результата.</h2>
+          <p>Не обязательно приходить с техническим заданием. Достаточно рассказать, что вы хотите получить и для кого это нужно.</p>
+        </div>
+        <div class="service-grid">
+          <article class="service">
+            <div class="service-icon" aria-hidden="true">▶</div>
+            <h3>ИИ-видео и ролики</h3>
+            <p>Концепция, сценарий, раскадровка и создание коротких видео для соцсетей, продуктов, презентаций и творческих проектов.</p>
+            <a href="https://t.me/serega40in" data-message="Здравствуйте! Хочу обсудить создание ИИ-видео или ролика.">Обсудить видео ↗</a>
+          </article>
+          <article class="service">
+            <div class="service-icon" aria-hidden="true">♫</div>
+            <h3>Музыка и звук</h3>
+            <p>Идея песни, текст, музыкальный образ, генерация демо и подбор звучания под проект, персонажа или бренд.</p>
+            <a href="https://t.me/serega40in" data-message="Здравствуйте! Хочу обсудить музыку, песню или звуковое оформление.">Обсудить музыку ↗</a>
+          </article>
+          <article class="service">
+            <div class="service-icon" aria-hidden="true">✳</div>
+            <h3>Персонажи и визуалы</h3>
+            <p>Образы, маскоты, обложки, визуальные концепции и наборы материалов, которые помогают проекту стать узнаваемым.</p>
+            <a href="https://t.me/serega40in" data-message="Здравствуйте! Хочу обсудить персонажа или визуальную концепцию.">Обсудить визуал ↗</a>
+          </article>
+          <article class="service">
+            <div class="service-icon" aria-hidden="true">⌘</div>
+            <h3>Боты и автоматизация</h3>
+            <p>Telegram-боты, мини-приложения, AI-помощники и небольшие инструменты, которые снимают повторяющиеся задачи.</p>
+            <a href="https://t.me/serega40in" data-message="Здравствуйте! Хочу обсудить Telegram-бота, мини-приложение или автоматизацию.">Обсудить автоматизацию ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="strip">
+      <div class="wrap strip-inner">
+        <div>
+          <h2>Не знаете, с чего начать?</h2>
+          <p>Опишите идею обычными словами. Вместе выберем самый простой первый шаг.</p>
+        </div>
+        <a class="button" data-message="Здравствуйте! У меня пока есть только идея. Помогите выбрать первый шаг." href="https://t.me/serega40in">Начать разговор <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Рабочая среда S40in</div>
+          <h2>Технологии — это способ воплотить замысел.</h2>
+          <p>Несколько открытых проектов, которые показывают наши направления. Новые примеры будем добавлять по мере готовности.</p>
+        </div>
+        <div class="work-grid">
+          <a class="work-card" href="https://serega40in.github.io/S40inMusic/" target="_blank" rel="noopener noreferrer">
+            <div class="work-art"><span>Music · imagination · worlds</span></div>
+            <div class="work-body"><h3>S40in Music</h3><p>Музыкальный проект о фантазии, пространстве и бесконечном творчестве.</p><span class="work-link">Открыть проект ↗</span></div>
+          </a>
+          <a class="work-card" href="https://serega40in.github.io/AIAcademy/" target="_blank" rel="noopener noreferrer">
+            <div class="work-art"><span>AI · creative technology</span></div>
+            <div class="work-body"><h3>AI Academy</h3><p>Эксперименты с нейросетями, визуальным контентом и цифровыми инструментами.</p><span class="work-link">Открыть проект ↗</span></div>
+          </a>
+          <a class="work-card" href="https://quniverse.ru/" target="_blank" rel="noopener noreferrer">
+            <div class="work-art"><span>QUN · digital products</span></div>
+            <div class="work-body"><h3>QUN Universe</h3><p>Экосистема цифровых продуктов и технологических экспериментов.</p><span class="work-link">Открыть проект ↗</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="process">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Просто и по делу</div>
+          <h2>Три шага до результата.</h2>
+        </div>
+        <div class="steps">
+          <article class="step"><h3>Обсуждаем</h3><p>Вы рассказываете, что хотите сделать, где будет использоваться результат и что для вас важно.</p></article>
+          <article class="step"><h3>Согласуем план</h3><p>Фиксируем объём работ, формат, сроки и стоимость до начала выполнения.</p></article>
+          <article class="step"><h3>Создаём и проверяем</h3><p>Показываем результат, собираем обратную связь и согласуем финальную передачу материалов.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap ethics">
+        <h2>Технологии — в помощь человеку.</h2>
+        <div>
+          <p>Мы используем ИИ как инструмент, а не как замену смыслу. Важно, чтобы результат подходил именно вашей задаче, был понятным и приносил пользу.</p>
+          <p>Каждый проект обсуждаем отдельно: доступные инструменты, права на материалы, сроки и стоимость согласуем заранее. Если задача не подходит по возможностям или срокам, скажем об этом до старта.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <div class="contact-panel">
+          <div class="contact-content">
+            <div class="eyebrow">Есть идея?</div>
+            <h2>Давайте превратим её в следующий шаг.</h2>
+            <p>Напишите пару строк о задаче. Можно без готового ТЗ, презентации и сложных формулировок — начнём с разговора.</p>
+            <div class="actions">
+              <a class="button button-primary" data-message="Здравствуйте! Хочу обсудить творческий проект с S40in." href="https://t.me/serega40in">Написать в Telegram <span aria-hidden="true">↗</span></a>
+              <a class="button button-secondary" href="https://github.com/Serega40in" target="_blank" rel="noopener noreferrer">GitHub S40in <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <span>© <span id="year">2026</span> S40in Creative Studio</span>
+    <span>Творчество в партнёрстве с ИИ · <a href="https://t.me/serega40in">Связаться</a></span>
+  </footer>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    document.querySelectorAll("a[data-message]").forEach((link) => {
+      link.addEventListener("click", () => {
+        const url = new URL("https://t.me/serega40in");
+        url.searchParams.set("text", link.dataset.message || "Здравствуйте! Хочу обсудить проект.");
+        link.href = url.toString();
+      });
+    });
+  </script>
+</body>
+</html>
