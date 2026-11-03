@@ -23,6 +23,7 @@
 | **Fox** | Экспериментальный web / AI-проект | [Открыть](https://serega40in.github.io/AIAcademy/Fox/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/Fox) |
 | **Game** | Игровой / стратегический web-прототип | [Открыть](https://serega40in.github.io/AIAcademy/Game/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/Game) |
 | **ReGen** | AI / regeneration проект с курсом | [Открыть](https://serega40in.github.io/AIAcademy/ReGen/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/ReGen) |
+| **S40in Creative Studio** | Творческие услуги: ИИ-видео, музыка, персонажи и автоматизация | [Открыть](https://serega40in.github.io/AIAcademy/S40inStudio/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/S40inStudio) |
 | **alhimic** | Экспериментальный AI / web-проект | [Открыть](https://serega40in.github.io/AIAcademy/alhimic/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/alhimic) |
 | **blogio** | Web-приложение для публикаций / блога | [Открыть](https://serega40in.github.io/AIAcademy/blogio/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/blogio) |
 | **blogiov2** | Вторая версия web-проекта Blogio | [Открыть](https://serega40in.github.io/AIAcademy/blogiov2/) · [Код](https://github.com/Serega40in/AIAcademy/tree/main/blogiov2) |
