@@ -60,7 +60,24 @@
       text-decoration: none; border-radius: 999px; min-height: 48px; padding: 12px 20px;
       font-weight: 750; font-size: 13px; transition: transform .2s, box-shadow .2s, background .2s;
     }
-    .nav-cta { background: var(--navy); color: #fff; }
+    .nav-links a.nav-cta,
+    .nav-links a.nav-cta:visited {
+      background: #123342;
+      color: #ffffff;
+      border: 1px solid #123342;
+      box-shadow: 0 5px 16px #102e3b26;
+    }
+    .nav-links a.nav-cta:hover,
+    .nav-links a.nav-cta:focus-visible {
+      background: #155247;
+      color: #ffffff;
+      border-color: #155247;
+      box-shadow: 0 9px 22px #102e3b30;
+    }
+    .nav-links a.nav-cta:focus-visible {
+      outline: 3px solid #d4a83b;
+      outline-offset: 3px;
+    }
     .nav-cta:hover, .button-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px #102e3b20; }
     .hero { position: relative; overflow: hidden; padding: clamp(66px, 9vw, 124px) 0 82px; }
     .hero::before {
