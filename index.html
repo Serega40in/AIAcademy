@@ -64,9 +64,12 @@
 <!-- HEADER -->
 <header class="fixed w-full z-50 glass border-b border-white/10">
   <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold">AI Academy</h1>
+    <div class="flex items-center gap-3">
+      <h1 class="text-xl font-bold">AI Academy</h1>
+      <a href="./S40inStudio/" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-lg border border-emerald-300/40 hover:bg-emerald-500/10 transition">S40in Creative Studio <span aria-hidden="true">↗</span></a>
+    </div>
 
-    <button onclick="toggleTheme()" class="text-sm px-3 py-1 border rounded-lg hover:scale-105 transition">
+    <button onclick="toggleTheme()" aria-label="Переключить тему" class="text-sm px-3 py-1 border rounded-lg hover:scale-105 transition">
       🌗
     </button>
   </div>
